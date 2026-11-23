@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore NoBroker interior painting, exterior painting, quick move-in painting and waterproofing services in Pune.">
+  <title>Painting Services in Pune | NoBroker</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='painting_services.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='copilot.css') }}">
+</head>
+<body>
+  <a href="/copilot?room=Full%20House" class="copilot-fab" title="Need help deciding? Launch AI Copilot">
+    <span class="copilot-fab__dot"></span>
+    ✦ Need Help? Ask Copilot
+  </a>
+  <svg class="icon-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="icon-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/><path d="M9 21v-7h6v7"/></symbol>
+    <symbol id="icon-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="icon-spark" viewBox="0 0 24 24"><path d="m12 3 1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z"/><path d="m19 14 1.2 2.8L23 18l-2.8 1.2L19 22l-1.2-2.8L15 18l2.8-1.2z"/></symbol>
+    <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="icon-droplet" viewBox="0 0 24 24"><path d="M12 22a8 8 0 0 0 8-8c0-4-8-12-8-12S4 10 4 14a8 8 0 0 0 8 8Z"/><path d="M8 15a4 4 0 0 0 4 4"/></symbol>
+    <symbol id="icon-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></symbol>
+    <symbol id="icon-ruler" viewBox="0 0 24 24"><path d="m3 17 14-14 4 4L7 21z"/><path d="m14 6 4 4M10 10l2 2M6 14l2 2"/></symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="icon-pin" viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="icon-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+  </svg>
+
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="NoBroker home services home"><span class="brand-mark">N</span><span><strong>NOBROKER</strong><small>Home Services</small></span></a>
+    <nav class="main-nav" aria-label="Page navigation"><a href="#services">Painting services</a><a href="#process">How it works</a><a href="#projects">Recent projects</a><a href="#faq">FAQs</a></nav>
+    <div class="header-right"><span class="location-chip"><svg><use href="#icon-pin"/></svg>Pune</span><button class="button button-primary header-cta" type="button" data-estimate="Home Painting">Get free estimate</button></div>
+    <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> NoBroker Home Painting</p>
+        <h1>Painting Services<br><span>for every kind of home.</span></h1>
+        <p class="hero-lede">Choose a finish that feels like you. Our trained painting partners help plan the work, prepare the surfaces and leave your home ready to enjoy.</p>
+        <div class="hero-actions"><button class="button button-primary" type="button" data-estimate="Home Painting">Get a free estimate <svg><use href="#icon-arrow"/></svg></button><a class="button button-quiet" href="#services">Explore services <span aria-hidden="true">↓</span></a></div>
+        <div class="hero-proof"><span class="rating-stars" aria-label="Rated 4.9 out of 5">★★★★★</span><span><strong>4.9/5</strong> customer rating</span><i></i><span>Trained painting partners</span></div>
+      </div>
+      <button class="hero-photo photo-trigger" type="button" data-photo="interior-painting.jpg" data-caption="A fresh interior finish, planned around your home." aria-label="View interior painting photo">
+        <img src="{{ url_for('assets', filename='painting/normal/interior-painting.jpg') }}" alt="NoBroker home painting professional in a freshly painted living room">
+        <span class="photo-caption"><span class="caption-mark">✦</span><span><strong>A fresh start for your walls</strong><small>Thoughtful painting, from prep to finish</small></span></span>
+        <span class="hero-photo-index">01 <i></i> 05</span>
+      </button>
+      <div class="hero-side-note"><span>01 / 05</span><span>Made for Pune homes</span></div>
+    </section>
+
+    <section class="service-section page-section" id="services">
+      <div class="section-heading"><div><p class="eyebrow">Painting choices for your home</p><h2>Find the right service</h2><p class="section-intro">From one room to the outside walls, pick the kind of painting your home needs.</p></div><span class="heading-stamp">PLAN · PAINT · ENJOY</span></div>
+      <div class="service-list">
+        {% for service in services %}
+        <article class="service-card" id="service-{{ loop.index }}">
+          <button class="service-image photo-trigger" type="button" data-photo="{{ service.photo }}" data-caption="{{ service.title }}" aria-label="View {{ service.title }} photo">
+            <img src="{{ url_for('assets', filename='painting/normal/' ~ service.photo) }}" alt="{{ service.alt }}" loading="lazy">
+            <span class="service-tag">{{ service.tag }}</span><span class="image-view">View photo <span aria-hidden="true">↗</span></span>
+          </button>
+          <div class="service-content">
+            <div class="service-title-row"><span class="service-icon"><svg><use href="#icon-{{ service.icon }}"/></svg></span><div><span class="service-kicker">NoBroker Painting</span><h3>{{ service.title }}</h3></div><span class="service-number">0{{ loop.index }}</span></div>
+            <p class="service-summary">{{ service.summary }}</p>
+            <ul class="service-points">{% for point in service.points %}<li><span class="check-mark">✓</span>{{ point }}</li>{% endfor %}</ul>
+            <div class="service-more" hidden><ul>{% for point in service.more %}<li>{{ point }}</li>{% endfor %}</ul></div>
+            <div class="service-actions"><button class="show-more" type="button" aria-expanded="false">Show more <span aria-hidden="true">⌄</span></button><button class="button button-primary estimate-button" type="button" data-estimate="{{ service.title }}">Get free estimate <svg><use href="#icon-arrow"/></svg></button></div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+      <p class="service-footnote">*Starting prices and completion timelines depend on the inspection, selected material and scope of work.</p>
+    </section>
+
+    <section class="promise-section page-section">
+      <div class="promise-intro"><p class="eyebrow">The NoBroker promise</p><h2>One team.<br>Clear ownership.</h2><p>Get support from the first inspection through the final quality check.</p><button class="text-link" type="button" data-estimate="Home Painting">Plan a home inspection <svg><use href="#icon-arrow"/></svg></button></div>
+      <div class="promise-grid"><article><span class="promise-icon"><svg><use href="#icon-shield"/></svg></span><h3>Genuine branded paints</h3><p>Review paint and labour details before you confirm your project.</p></article><article><span class="promise-icon"><svg><use href="#icon-home"/></svg></span><h3>End-to-end managed</h3><p>A dedicated supervisor helps you follow the project from start to finish.</p></article><article><span class="promise-icon"><svg><use href="#icon-check"/></svg></span><h3>Trained painting partners</h3><p>Experienced teams follow a structured preparation and painting process.</p></article><article><span class="promise-icon"><svg><use href="#icon-spark"/></svg></span><h3>Cleanup and quality check</h3><p>We wrap up with a post-painting cleanup and a final quality check.</p></article></div>
+    </section>
+
+    <section class="process-section page-section" id="process">
+      <div class="section-heading"><div><p class="eyebrow">Simple from the first visit</p><h2>How painting works</h2><p class="section-intro">A clear plan helps your home project move forward with confidence.</p></div><button class="text-link" type="button" data-estimate="Home Painting">Start with an estimate <svg><use href="#icon-arrow"/></svg></button></div>
+      <div class="process-grid">{% for step in process_steps %}<article class="process-card"><span class="process-icon"><svg><use href="#icon-{{ step.icon }}"/></svg></span><span class="process-number">{{ step.number }}</span><h3>{{ step.title }}</h3><p>{{ step.copy }}</p></article>{% endfor %}</div>
+    </section>
+
+    <section class="projects-section page-section" id="projects">
+      <div class="section-heading"><div><p class="eyebrow">A little colour inspiration</p><h2>Recent painting work</h2><p class="section-intro">Explore the photos and imagine a fresh look for your own space.</p></div><span class="projects-count">05 <span>PHOTOS</span></span></div>
+      <div class="project-gallery">{% for service in services %}<button class="project-tile photo-trigger" type="button" data-photo="{{ service.photo }}" data-caption="{{ service.title }}"><img src="{{ url_for('assets', filename='painting/normal/' ~ service.photo) }}" alt="{{ service.alt }}" loading="lazy"><span><small>PAINTING SERVICES</small><strong>{{ service.title }}</strong><i>↗</i></span></button>{% endfor %}</div>
+    </section>
+
+    <section class="faq-section page-section" id="faq">
+      <div><p class="eyebrow">Helpful details</p><h2>Frequently asked questions</h2><p class="section-intro">A few answers before you plan your painting project.</p></div>
+      <div class="faq-list">{% for faq in faqs %}<details class="faq-item"><summary>{{ faq.question }}<span aria-hidden="true">+</span></summary><p>{{ faq.answer }}</p></details>{% endfor %}</div>
+    </section>
+
+    <section class="closing-cta"><div><p class="eyebrow">Your home, your colours</p><h2>Ready for a fresh coat?</h2><p>Book a home inspection and get a clear estimate for your painting needs.</p></div><button class="button button-light" type="button" data-estimate="Home Painting">Get a free estimate <svg><use href="#icon-arrow"/></svg></button></section>
+  </main>
+
+  <footer class="site-footer"><a class="brand" href="/"><span class="brand-mark">N</span><span><strong>NOBROKER</strong><small>Home Services</small></span></a><p>Thoughtful home services, made easier.</p><a href="/">← Home services</a><small>© NoBroker Home Services</small></footer>
+
+  <div class="modal-backdrop" id="estimateModal" aria-hidden="true">
+    <section class="estimate-dialog" role="dialog" aria-modal="true" aria-labelledby="estimateTitle">
+      <button class="modal-close" type="button" data-close-estimate aria-label="Close estimate form"><svg><use href="#icon-close"/></svg></button>
+      <span class="eyebrow">Start with a home visit</span><h2 id="estimateTitle">Get a free estimate</h2><p class="dialog-intro">Share your details and our team will help arrange a painting inspection.</p>
+      <form id="estimateForm">
+        <input type="hidden" name="service" id="estimateService" value="Home Painting">
+        <label for="estimateName">Your name</label><input id="estimateName" name="name" autocomplete="name" required placeholder="Enter your full name">
+        <label for="estimatePhone">Phone number</label><input id="estimatePhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" pattern="[0-9 +()\-]{10,}" required placeholder="Enter your phone number">
+        <div class="form-row"><div><label for="estimateDate">Preferred date</label><input id="estimateDate" name="date" type="date" required></div><div><label for="estimateCity">City</label><select id="estimateCity" name="city"><option>Pune</option><option>Mumbai</option><option>Bangalore</option><option>Hyderabad</option></select></div></div>
+        <label for="estimateNotes">What would you like painted?</label><textarea id="estimateNotes" name="notes" rows="3" placeholder="For example: two bedrooms and a living room"></textarea>
+        <button class="button button-primary submit-button" type="submit">Request estimate <svg><use href="#icon-arrow"/></svg></button><p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </div>
+  <div class="photo-viewer" id="photoViewer" aria-hidden="true"><button type="button" class="viewer-close" aria-label="Close photo"><svg><use href="#icon-close"/></svg></button><img id="viewerImage" src="" alt=""><p id="viewerCaption"></p></div>
+  <script src="{{ url_for('static', filename='painting_services.js') }}" defer></script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Explore NoBroker Premium Painting services in Pune. Book a home inspection and get an itemised painting quote.">
+  <title>Premium Painting Services in Pune | NoBroker</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='premium_painting.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='copilot.css') }}">
+</head>
+<body>
+  <a href="/copilot?room=Full%20House" class="copilot-fab" title="Need help deciding? Launch AI Copilot"><span class="copilot-fab__dot"></span>✦ Need Help? Ask Copilot</a>
+  <header class="premium-header">
+    <a class="brand" href="/" aria-label="NoBroker Home Services home"><span class="brand-mark">N</span><span><strong>NOBROKER</strong><small>Home Services</small></span></a>
+    <nav aria-label="Page navigation">
+      <a href="#process">Our process</a><a href="#grades">Paint grades</a><a href="#projects">Our projects</a><a href="#faq">FAQs</a>
+    </nav>
+    <div class="header-actions"><span class="city-chip">⌖ &nbsp;Pune</span><a class="header-book" href="#book" onclick="openQuoteModal(event)">Book Inspection</a></div>
+  </header>
+
+  <main>
+    <section class="premium-hero">
+      <img class="hero-photo" src="{{ photo_base }}hero.jpg" alt="Flat 15 percent off premium painting promotion">
+      <div class="hero-shade"></div>
+      <div class="hero-content">
+        <div class="rating-pill"><img src="{{ icon_base }}rating-star.svg" alt=""> <strong>4.9</strong> <span>premium painting</span></div>
+        <h1>Premium Painting<br>Services</h1>
+        <p class="hero-meta"><span>Pune</span><i></i><span>380 premium jobs</span></p>
+        <p class="hero-copy">A thoughtful, end-to-end painting experience, planned around your home.</p>
+        <button class="primary-cta" onclick="openQuoteModal()">Book Inspection for Quote <span aria-hidden="true">→</span></button>
+        <p class="hero-footnote">₹49 visit charge · Get measurements and an itemised quote</p>
+      </div>
+      <a class="hero-back" href="/" aria-label="Back to home services">← &nbsp; Home Services</a>
+    </section>
+
+    <section class="section quality-section" id="quality">
+      <div class="section-heading"><span class="eyebrow">A considered painting experience</span><h2>Find the Quality You Deserve</h2><p>Explore an end-to-end seamless painting experience with NoBroker Premium Painting.</p></div>
+      <div class="quality-track" aria-label="Painting service highlights">
+        <article class="quality-card"><img src="{{ photo_base }}quality-transformation-1.jpg" alt="Home before and after painting"><span>Transformation</span></article>
+        <article class="quality-card"><img src="{{ photo_base }}quality-texture.jpg" alt="Close-up of a premium wall texture"><span>Texture</span></article>
+        <article class="quality-card quality-card-featured"><img src="{{ photo_base }}quality-transformation-2.jpg" alt="Freshly painted living room"><span>Transformation</span></article>
+        <article class="quality-card"><img src="{{ photo_base }}quality-process.jpg" alt="Painter carefully finishing a wall"><span>Process</span></article>
+        <article class="quality-card"><img src="{{ photo_base }}quality-consultation.jpg" alt="Colour consultation for a home"><span>Consultation</span></article>
+      </div>
+      <div class="track-hint"><span>Swipe to explore</span><span class="track-line"></span><span>01 / 05</span></div>
+    </section>
+
+    <section class="section process-section" id="process">
+      <div class="section-heading"><span class="eyebrow">From first visit to final handover</span><h2>Our Process</h2><p>Our painting process is optimised to bring your vision to life with expertise and care.</p></div>
+      <div class="process-grid">
+        {% for step in process_steps %}
+        <article class="process-card">
+          <div class="process-image"><img src="{{ photo_base }}{{ step.photo }}" alt="{{ step.title }}"><span>{{ step.tag }}</span></div>
+          <div class="process-icon"><img src="{{ icon_base }}process-step-icon-{{ loop.index if loop.index <= 3 else 3 }}.svg" alt=""></div>
+          <h3>{{ step.title }}</h3><p>{{ step.description }}</p>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="section management-section">
+      <div class="section-heading"><span class="eyebrow">One team, clear ownership</span><h2>Effortless Management for You</h2><p>Get one accountable relationship and supervisor ownership, backed by experienced painting partners.</p></div>
+      <div class="management-grid">
+        <article><span class="management-number">01</span><div><h3>A dedicated supervisor</h3><p>One point of contact keeps your project and next steps clear.</p></div></article>
+        <article><span class="management-number">02</span><div><h3>Experienced partners</h3><p>Trained painting professionals work to the agreed scope.</p></div></article>
+        <article><span class="management-number">03</span><div><h3>Updates at each stage</h3><p>Know what is happening from preparation through handover.</p></div></article>
+      </div>
+    </section>
+
+    <section class="section colour-section" id="colour-preview">
+      <div class="section-heading"><span class="eyebrow">Find a shade that feels like home</span><h2>Test a Colour Virtually</h2><p>Select a colour to preview it on a wall and save your favourites for the visit.</p></div>
+      <div class="colour-tool">
+        <div class="colour-preview" id="colourPreview" style="--preview-shade:#c9b99f">
+          <img src="{{ photo_base }}project-1.jpg" alt="Living room colour preview">
+          <div class="preview-wall" aria-hidden="true"></div>
+          <span class="preview-label">Your room, your colour</span>
+        </div>
+        <div class="colour-picker"><p class="picker-label">Choose a wall shade</p><div class="swatches" role="group" aria-label="Choose a paint colour">
+          <button class="swatch selected" style="--swatch:#c9b99f" data-colour="#c9b99f" aria-label="Warm sand" aria-pressed="true"></button>
+          <button class="swatch" style="--swatch:#d5d0c4" data-colour="#d5d0c4" aria-label="Soft ivory" aria-pressed="false"></button>
+          <button class="swatch" style="--swatch:#9aab9a" data-colour="#9aab9a" aria-label="Sage green" aria-pressed="false"></button>
+          <button class="swatch" style="--swatch:#b7c5ce" data-colour="#b7c5ce" aria-label="Misty blue" aria-pressed="false"></button>
+          <button class="swatch" style="--swatch:#b87f6c" data-colour="#b87f6c" aria-label="Clay rose" aria-pressed="false"></button>
+          <button class="swatch" style="--swatch:#8d8375" data-colour="#8d8375" aria-label="Stone grey" aria-pressed="false"></button>
+        </div><p class="selected-colour">Selected shade <strong id="selectedColourName">Warm sand</strong></p><button class="save-colour" id="saveColour">♡ &nbsp; Save this shade</button><p class="saved-note" id="savedNote" aria-live="polite"></p><small>Colour preview is an approximate guide. Confirm the shade with your consultant.</small></div>
+      </div>
+    </section>
+
+    <section class="section grades-section" id="grades">
+      <div class="section-heading"><span class="eyebrow">Choose the finish that fits your home</span><h2>Explore Paint Grades</h2><p>Swipe to explore paint grades from leading paint brands.</p></div>
+      <div class="grade-grid">
+        {% for grade in paint_grades %}
+        <article class="grade-card"><div class="grade-photo"><img src="{{ photo_base }}{{ grade.photo }}" alt="{{ grade.name }} finish"><span>{{ grade.brand }}</span></div><div class="grade-info"><span class="grade-kicker">{{ grade.brand }}</span><h3>{{ grade.name }}</h3><p>{{ grade.description }}</p><button onclick="openQuoteModal()">Ask about this grade <span>→</span></button></div></article>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="section homes-section" id="projects">
+      <div class="section-heading"><span class="eyebrow">Real homes, thoughtful finishes</span><h2>Homes We Painted Near You</h2><p>Photographed at handover, with a line from the owner. Tap a project to see the photo up close.</p></div>
+      <div class="project-grid">
+        {% for project in projects %}
+        <article class="project-card">
+          <button class="project-view" data-photo="{{ photo_base }}{{ project.after }}" data-caption="{{ project.title }}" aria-label="View {{ project.title }} after painting">
+            <span class="project-photo"><img src="{{ photo_base }}{{ project.after }}" alt="{{ project.title }} after painting, {{ project.location }}"><span class="photo-state">After</span><span class="zoom-mark" aria-hidden="true">↗</span></span>
+          </button>
+          <div class="project-text"><strong>{{ project.title }}</strong><small>{{ project.location }}</small><em>“{{ project.note }}”</em><button class="project-toggle" data-before="{{ photo_base }}{{ project.before }}" data-after="{{ photo_base }}{{ project.after }}" aria-pressed="false">See where it started <span>↔</span></button></div>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="section included-section">
+      <div class="section-heading"><span class="eyebrow">Clear expectations, from day one</span><h2>Before We Take Charge</h2><p>See what NoBroker takes care of and what we recommend you arrange before painting begins.</p></div>
+      <div class="included-grid"><article><h3><span>✓</span> We take care of</h3><ul><li>Wall inspection and measurements</li><li>Itemised scope and material estimate</li><li>Surface preparation in the agreed scope</li><li>Covering floors and nearby furniture</li><li>Supervisor coordination through handover</li></ul></article><article><h3><span>i</span> Please plan for</h3><ul><li>Moving valuables and fragile items</li><li>Access to water and electricity</li><li>Keeping pets away from work areas</li><li>Confirming colours before work starts</li><li>Allowing the room to dry before use</li></ul></article></div>
+    </section>
+
+    <section class="section insured-section">
+      <div class="insured-copy"><span class="eyebrow">Peace of mind for your project</span><h2>Insured Paint Work</h2><p>Claims raised in the app against completed painting bookings are reviewed under the applicable service conditions.</p><button class="text-link" onclick="openQuoteModal()">Talk to a painting consultant <span>→</span></button></div>
+      <div class="insured-photo"><img src="{{ photo_base }}insured-work.jpg" alt="Painting team working carefully inside a home"><div class="insured-badge"><span>✓</span><strong>Work covered<br>with care</strong></div></div>
+    </section>
+
+    <section class="section compare-section">
+      <div class="section-heading"><span class="eyebrow">A clearer way to plan painting</span><h2>Against the Alternatives</h2></div>
+      <div class="comparison-wrap"><table><thead><tr><th>Key value points</th><th class="nobroker-col">NoBroker</th><th>Independent vendor</th></tr></thead><tbody>
+        <tr><th>Written, itemised quote</th><td class="nobroker-col"><span class="check">✓</span></td><td>Varies</td></tr>
+        <tr><th>Dedicated project supervisor</th><td class="nobroker-col"><span class="check">✓</span></td><td>Usually not included</td></tr>
+        <tr><th>Paint and labour cost breakdown</th><td class="nobroker-col"><span class="check">✓</span></td><td>May be combined</td></tr>
+        <tr><th>Structured preparation and handover</th><td class="nobroker-col"><span class="check">✓</span></td><td>Depends on provider</td></tr>
+        <tr><th>App support for eligible claims</th><td class="nobroker-col"><span class="check">✓</span></td><td>Varies</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="section stories-section">
+      <div class="section-heading"><span class="eyebrow">A few things worth knowing</span><h2>Sorted By What Worried Them</h2><p>Questions customers asked before booking a visit.</p></div>
+      <div class="story-grid"><article><span>01 / COST</span><h3>“Will the estimate change later?”</h3><p>The consultant measures the area and records the scope. Any additions can be discussed before confirming the work.</p></article><article><span>02 / COLOUR</span><h3>“What if I am unsure about the shade?”</h3><p>Explore options during the consultation and confirm your choice before the painting starts.</p></article><article><span>03 / PROCESS</span><h3>“Who will coordinate the work?”</h3><p>A project supervisor helps keep the schedule and communication organised.</p></article></div>
+    </section>
+
+    <section class="section faq-section" id="faq">
+      <div class="section-heading"><span class="eyebrow">Helpful details before you book</span><h2>Frequently Asked Questions</h2></div>
+      <div class="faq-list">{% for faq in faqs %}<details class="faq-item"><summary>{{ faq.question }}<span aria-hidden="true">+</span></summary><p>{{ faq.answer }}</p></details>{% endfor %}</div>
+    </section>
+
+    <section class="localities"><div><span class="eyebrow">Serving homes around Pune</span><h2>Painting Services in Pune</h2><p>Baner · Wakad · Kothrud · Aundh · Viman Nagar · Pimple Saudagar · Hinjawadi · Hadapsar</p></div><button class="primary-cta" onclick="openQuoteModal()">Book Inspection for Quote <span>→</span></button></section>
+  </main>
+
+  <footer class="premium-footer"><a class="brand" href="/"><span class="brand-mark">N</span><span><strong>NOBROKER</strong><small>Home Services</small></span></a><p>Thoughtful home services, made easier.</p><a href="/">← &nbsp;Back to Home Services</a><small>© NoBroker Home Services</small></footer>
+
+  <div class="modal-backdrop" id="quoteModal" aria-hidden="true">
+    <section class="quote-dialog" role="dialog" aria-modal="true" aria-labelledby="quoteTitle">
+      <button class="modal-close" type="button" onclick="closeQuoteModal()" aria-label="Close">×</button>
+      <span class="eyebrow">Start with a home visit</span><h2 id="quoteTitle">Book an Inspection</h2><p class="dialog-intro">Share your details and our team will help arrange a painting consultation.</p>
+      <form id="quoteForm">
+        <label for="quoteName">Your name</label><input id="quoteName" name="name" autocomplete="name" required placeholder="Enter your full name">
+        <label for="quotePhone">Phone number</label><input id="quotePhone" name="phone" inputmode="tel" autocomplete="tel" pattern="[0-9 +()-]{10,}" required placeholder="Enter your phone number">
+        <div class="form-row"><div><label for="quoteDate">Preferred date</label><input id="quoteDate" name="date" type="date" required></div><div><label for="quoteCity">City</label><select id="quoteCity" name="city"><option>Pune</option><option>Mumbai</option><option>Bangalore</option><option>Hyderabad</option></select></div></div>
+        <label for="quoteNote">What would you like painted?</label><textarea id="quoteNote" name="notes" rows="3" placeholder="For example: 2 bedrooms and living room"></textarea>
+        <button class="primary-cta submit-quote" type="submit">Request Inspection <span>→</span></button><p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </div>
+  <div class="photo-viewer" id="photoViewer" aria-hidden="true" onclick="closePhoto(event)"><button type="button" aria-label="Close photo" onclick="closePhoto(event)">×</button><img id="viewerImage" src="" alt=""><p id="viewerCaption"></p></div>
+  <script>
+    const quoteModal = document.getElementById('quoteModal');
+    const quoteForm = document.getElementById('quoteForm');
+    const quoteDate = document.getElementById('quoteDate');
+    quoteDate.min = new Date().toISOString().slice(0, 10);
+
+    function openQuoteModal(event) {
+      if (event) event.preventDefault();
+      quoteModal.classList.add('open');
+      quoteModal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('modal-open');
+      setTimeout(() => document.getElementById('quoteName').focus(), 50);
+    }
+    function closeQuoteModal() {
+      quoteModal.classList.remove('open');
+      quoteModal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+    }
+    quoteModal.addEventListener('click', event => { if (event.target === quoteModal) closeQuoteModal(); });
+    document.addEventListener('keydown', event => { if (event.key === 'Escape') { closeQuoteModal(); closePhoto(); } });
+
+    quoteForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      const status = document.getElementById('formStatus');
+      const fields = new FormData(quoteForm);
+      const payload = {
+        service: 'Premium Painting - Inspection for Quote',
+        name: fields.get('name'), phone: fields.get('phone'), date: fields.get('date'),
+        city: fields.get('city'), notes: fields.get('notes')
+      };
+      status.textContent = 'Sending your request…';
+      try {
+        const response = await fetch('/book', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || 'Could not send your request.');
+        status.textContent = 'Thanks! Your inspection request has been received.';
+        quoteForm.reset();
+        quoteDate.min = new Date().toISOString().slice(0, 10);
+      } catch (error) {
+        status.textContent = error.message || 'Please try again in a moment.';
+      }
+    });
+
+    const shadeNames = {'#c9b99f':'Warm sand','#d5d0c4':'Soft ivory','#9aab9a':'Sage green','#b7c5ce':'Misty blue','#b87f6c':'Clay rose','#8d8375':'Stone grey'};
+    document.querySelectorAll('.swatch').forEach(swatch => swatch.addEventListener('click', () => {
+      document.getElementById('colourPreview').style.setProperty('--preview-shade', swatch.dataset.colour);
+      document.getElementById('selectedColourName').textContent = shadeNames[swatch.dataset.colour];
+      document.querySelectorAll('.swatch').forEach(item => { item.classList.toggle('selected', item === swatch); item.setAttribute('aria-pressed', item === swatch ? 'true' : 'false'); });
+      document.getElementById('savedNote').textContent = '';
+      document.getElementById('saveColour').textContent = '♡  Save this shade';
+    }));
+    document.getElementById('saveColour').addEventListener('click', event => {
+      const colour = document.getElementById('selectedColourName').textContent;
+      const saved = JSON.parse(localStorage.getItem('premiumPaintingShades') || '[]');
+      if (!saved.includes(colour)) saved.push(colour);
+      localStorage.setItem('premiumPaintingShades', JSON.stringify(saved));
+      event.currentTarget.textContent = '♥  Shade saved';
+      document.getElementById('savedNote').textContent = 'Saved for your painting consultation.';
+    });
+
+    function openPhoto(src, caption) {
+      document.getElementById('viewerImage').src = src;
+      document.getElementById('viewerImage').alt = caption;
+      document.getElementById('viewerCaption').textContent = caption;
+      const viewer = document.getElementById('photoViewer');
+      viewer.classList.add('open'); viewer.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('modal-open');
+    }
+    document.querySelectorAll('.project-view').forEach(card => card.addEventListener('click', () => openPhoto(card.dataset.photo, card.dataset.caption)));
+    document.querySelectorAll('.project-toggle').forEach(toggle => toggle.addEventListener('click', () => {
+      const card = toggle.closest('.project-card');
+      const photo = card.querySelector('.project-view img');
+      const state = card.querySelector('.photo-state');
+      const showingBefore = toggle.getAttribute('aria-pressed') !== 'true';
+      photo.src = showingBefore ? toggle.dataset.before : toggle.dataset.after;
+      photo.alt = showingBefore ? `${card.querySelector('strong').textContent} before painting` : `${card.querySelector('strong').textContent} after painting`;
+      card.querySelector('.project-view').dataset.photo = photo.src;
+      state.textContent = showingBefore ? 'Before' : 'After';
+      toggle.setAttribute('aria-pressed', showingBefore ? 'true' : 'false');
+      toggle.firstChild.textContent = showingBefore ? 'See the finished room ' : 'See where it started ';
+    }));
+    function closePhoto(event) {
+      if (event && event.target !== document.getElementById('photoViewer') && event.currentTarget === document.getElementById('photoViewer')) return;
+      const viewer = document.getElementById('photoViewer');
+      if (!viewer.classList.contains('open')) return;
+      viewer.classList.remove('open'); viewer.setAttribute('aria-hidden', 'true');
+      if (!quoteModal.classList.contains('open')) document.body.classList.remove('modal-open');
+    }
+  </script>
+</body>
+</html>

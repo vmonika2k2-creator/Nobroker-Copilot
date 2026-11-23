@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Book verified electrician services in Pune. Browse geyser, lighting, fan, switchboard, wiring and other electrical services.">
+  <title>Electrician in Pune | Book Online | NoBroker</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='electrician.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='copilot.css') }}">
+</head>
+<body>
+  <a href="/copilot?room=Living%20Room" class="copilot-fab" title="Need help deciding? Launch AI Copilot">
+    <span class="copilot-fab__dot"></span>
+    ✦ Need Help? Ask Copilot
+  </a>
+  <header class="electric-header">
+    <a class="brand" href="/" aria-label="NoBroker home"><span class="brand-mark">N</span><span><strong>NOBROKER</strong><small>Home Services</small></span></a>
+    <div class="header-location"><span class="pin-icon">⌖</span><span>Pune</span><span class="chevron">⌄</span></div>
+    <button class="cart-shortcut" type="button" data-open-cart><span aria-hidden="true">▣</span> Cart <b id="cartCount">0</b></button>
+  </header>
+
+  <main>
+    <section class="electric-hero">
+      <div class="electric-hero-inner">
+        <div class="hero-search"><span class="search-icon" aria-hidden="true"></span><input id="serviceSearch" type="search" placeholder="Search electrical services" autocomplete="off" aria-label="Search electrician services"><kbd>⌕</kbd></div>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="hero-eyebrow"><span></span> Trusted home services</p>
+            <h1>Electrician in Pune –<br>Book online at <em>just ₹99</em></h1>
+            <p class="hero-rating"><span>★</span> 4.8 <small>(127.6K+ ratings)</small></p>
+            <div class="quick-categories" id="quickCategories">
+              {% for category in quick_categories %}
+              <a class="quick-category{% if loop.index > 7 %} quick-extra{% endif %}" href="#{{ category.id }}" data-search-category="{{ category.title|lower }}">
+                <span class="quick-icon" aria-hidden="true">{{ category.emoji }}</span><span>{{ category.title }}</span>
+                {% if loop.index == 1 %}<small class="quick-tag">Winter ready</small>{% endif %}
+                {% if loop.index == 4 %}<small class="quick-tag">Trending</small>{% endif %}
+              </a>
+              {% endfor %}
+              <button class="quick-category show-all" id="showAllCategories" type="button" aria-expanded="false"><span class="quick-icon more-icon">⌄</span><span>Show More</span></button>
+            </div>
+          </div>
+          <aside class="hero-promo">
+            <button class="promo-photo" type="button" data-photo="{{ hero_photo }}" data-caption="NoBroker electrician service in Pune" aria-label="View electrician service photo">
+              <img src="{{ url_for('assets', filename='electrican/photos/' ~ hero_photo) }}" alt="NoBroker electrician helping a customer at home">
+            </button>
+            <div class="promo-copy"><span class="vip-mark">V</span><div><small>VIP MEMBERSHIP</small><strong>Save up to 15% on cleaning, plumbing and electrical services</strong></div><button class="vip-buy" type="button" data-add-membership>BUY</button></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="catalog-wrap" aria-label="Electrician services">
+      <div class="catalog-column">
+        <div class="catalog-heading"><div><span class="catalog-kicker">Browse by need</span><h2>Electrician Services</h2></div><div class="result-count" id="resultCount">{{ total_services }} services</div></div>
+        <div id="noResults" class="no-results" hidden>No matching services. Try a different search.</div>
+        {% for category in categories %}
+        <section class="service-group" id="{{ category.id }}" data-category="{{ category.title|lower }}">
+          <div class="group-title"><span class="group-icon" aria-hidden="true">{{ category.emoji }}</span><h2>{{ category.title }}</h2><span class="group-count">{{ category['items']|length }} services</span></div>
+          <div class="group-items">
+            {% for service in category['items'] %}
+            {% set photo_name = category.photo_stem ~ '-' ~ '%02d'|format(service.image) ~ '.' ~ category.photo_ext %}
+            <article class="electric-service" data-service-name="{{ service.name|lower }} {{ category.title|lower }}">
+              <div class="electric-service-info">
+                <h3>{{ service.name }}</h3>
+                {% if service.rating %}<p class="service-rating"><span>★</span> {{ service.rating }}</p>{% endif %}
+                {% if service.duration %}<span class="service-time">◷ &nbsp;{{ service.duration }}</span>{% endif %}
+                <p class="service-price">{% if service.price_label %}{{ service.price_label }} {% endif %}<strong>₹{{ service.price }}</strong>{% if service.old_price %}<del>₹{{ service.old_price }}</del>{% endif %}{% if service.badge %}<span class="discount">{{ service.badge }}</span>{% endif %}</p>
+                {% if service.details %}<ul class="service-details">{% for detail in service.details %}<li>{{ detail }}</li>{% endfor %}</ul>{% endif %}
+                <button class="details-toggle" type="button" aria-expanded="false">View details <span>›</span></button>
+                <div class="details-panel" hidden><p>Includes a technician visit for <strong>{{ service.name|lower }}</strong>. The technician will confirm the work and any material charges before proceeding.</p><p class="detail-note">Spare parts and additional material, if needed, are charged separately.</p></div>
+              </div>
+              <div class="service-product">
+                <button class="product-photo" type="button" data-photo="{{ photo_name }}" data-caption="{{ service.name }}" aria-label="View {{ service.name }} photo"><img src="{{ url_for('assets', filename='electrican/photos/' ~ photo_name) }}" alt="{{ service.name }} service" loading="lazy"></button>
+                <button class="add-service" type="button" data-add-service data-name="{{ service.name }}" data-price="{{ service.price }}" data-photo="{{ photo_name }}">ADD <span aria-hidden="true">+</span></button>
+                {% if service.options %}<small>{{ service.options }} options</small>{% endif %}
+              </div>
+            </article>
+            {% endfor %}
+          </div>
+        </section>
+        {% endfor %}
+        <section class="electric-faq">
+          <span class="catalog-kicker">Before you book</span><h2>Frequently asked questions</h2>
+          <details><summary>How does an electrician visit work?<span>+</span></summary><p>Choose a service or add an at-home consultation. Share your contact details and preferred date; the technician will confirm the scope before starting any additional work.</p></details>
+          <details><summary>Are spare parts included in the service price?<span>+</span></summary><p>Service prices cover the listed work. Spare parts and any additional materials are quoted separately and confirmed before the work proceeds.</p></details>
+          <details><summary>Can I add more than one electrical service?<span>+</span></summary><p>Yes. Add multiple services to your cart, review them together, and submit one booking request.</p></details>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <div class="cart-bar" id="cartBar" hidden><div><span class="cart-bar-count" id="cartBarCount">0 services</span><strong id="cartBarTotal">₹0</strong></div><button type="button" data-open-cart>View cart &amp; book <span>→</span></button></div>
+
+  <div class="overlay" id="cartOverlay" aria-hidden="true">
+    <section class="side-panel" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+      <div class="panel-header"><div><span class="catalog-kicker">Your selection</span><h2 id="cartTitle">Service cart</h2></div><button class="close-button" type="button" data-close-cart aria-label="Close cart">×</button></div>
+      <div class="cart-items" id="cartItems"></div>
+      <div class="cart-empty" id="cartEmpty"><span>⌁</span><strong>Your cart is empty</strong><p>Add a service to start your booking.</p></div>
+      <div class="cart-summary" id="cartSummary" hidden><div><span>Service total</span><strong id="cartSummaryTotal">₹0</strong></div><small>Final price may change if additional parts or materials are required.</small><button class="book-cart" type="button" data-open-booking>Continue to booking <span>→</span></button></div>
+    </section>
+  </div>
+
+  <div class="overlay" id="bookingOverlay" aria-hidden="true">
+    <section class="booking-panel" role="dialog" aria-modal="true" aria-labelledby="bookingTitle">
+      <button class="close-button booking-close" type="button" data-close-booking aria-label="Close booking form">×</button>
+      <span class="catalog-kicker">Book at home</span><h2 id="bookingTitle">Schedule an electrician</h2><p class="booking-intro">Add your contact details and preferred visit date.</p>
+      <form id="bookingForm">
+        <label for="customerName">Your name</label><input id="customerName" name="name" required autocomplete="name" placeholder="Enter your full name">
+        <label for="customerPhone">Phone number</label><input id="customerPhone" name="phone" type="tel" required pattern="[0-9 +()\-]{10,}" placeholder="Enter your phone number">
+        <div class="booking-row"><div><label for="customerDate">Preferred date</label><input id="customerDate" name="date" type="date" required></div><div><label for="customerCity">City</label><select id="customerCity" name="city"><option>Pune</option><option>Mumbai</option><option>Bangalore</option><option>Hyderabad</option></select></div></div>
+        <label for="bookingNotes">Notes for the technician <span>(optional)</span></label><textarea id="bookingNotes" name="notes" rows="3" placeholder="Describe the issue or add access details"></textarea>
+        <button class="book-cart submit-booking" type="submit">Confirm booking <span>→</span></button><p class="booking-status" id="bookingStatus" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </div>
+
+  <div class="photo-overlay" id="photoOverlay" aria-hidden="true"><button type="button" class="photo-close" data-close-photo aria-label="Close photo">×</button><img src="" alt="" id="largePhoto"><p id="photoCaption"></p></div>
+  <script src="{{ url_for('static', filename='electrician.js') }}" defer></script>
+</body>
+</html>

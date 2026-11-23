@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Book verified carpentry services in Pune, including door repair, furniture assembly, cupboard repair and wardrobe installation.">
+  <title>Carpenter in Pune | Book Online | NoBroker</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='carpenter.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='copilot.css') }}">
+</head>
+<body>
+  <a href="/copilot?room=Bedroom" class="copilot-fab" title="Need help deciding? Launch AI Copilot"><span class="copilot-fab__dot"></span>✦ Need Help? Ask Copilot</a>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="NoBroker Home Services"><strong>NoBroker</strong><span>Home Services</span></a>
+    <nav class="header-nav" aria-label="Account navigation">
+      <button class="location-button" type="button">Pune <span aria-hidden="true">⌄</span></button>
+      <button class="plain-nav" type="button" data-open-bookings>My Bookings <span id="bookingCount">0</span></button>
+      <button class="plain-nav" type="button" data-open-booking data-service="Carpenter consultation">Login / Sign up</button>
+      <button class="header-cart" type="button" data-open-cart aria-label="Open cart">Cart <span id="cartCount">0</span></button>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-wrap">
+      <p class="breadcrumb"><a href="/">Home</a><span>/</span><a href="/">Home Services</a><span>/</span><strong>Carpenter in Pune</strong></p>
+      <section class="intro" aria-labelledby="pageTitle">
+        <div class="intro-copy">
+          <p class="eyebrow">Trusted home services <span class="eyebrow-dot"></span> Verified professionals</p>
+          <h1 id="pageTitle">Carpenter in Pune – Book Online at Just <span>₹99</span></h1>
+          <p class="intro-subtitle">Expert carpentry services at your doorstep</p>
+          <label class="service-search"><span aria-hidden="true">⌕</span><input id="serviceSearch" type="search" placeholder="Search a service" autocomplete="off" aria-label="Search carpentry services"><kbd>Ctrl K</kbd></label>
+        </div>
+        <aside class="rating-card" aria-label="Carpentry rating summary">
+          <strong><span aria-hidden="true">★</span> 4.78 <small>/ 5</small></strong>
+          <p>102.7K+ customer ratings</p>
+          <span class="warranty"><span aria-hidden="true">✓</span> 60 Days Warranty on eligible services</span>
+        </aside>
+      </section>
+
+      <nav class="category-chips" aria-label="Carpentry categories">
+        {% for category in categories %}
+        <a href="#{{ category.id }}"><span aria-hidden="true">{{ category.icon }}</span>{{ category.title }}</a>
+        {% endfor %}
+      </nav>
+
+      <div class="catalog-layout">
+        <aside class="category-sidebar">
+          <h2>Categories</h2>
+          <nav aria-label="Service categories">
+            {% for category in categories %}
+            <a href="#{{ category.id }}" data-side-link="{{ category.id }}"><span aria-hidden="true">{{ category.icon }}</span>{{ category.title }}<small>{{ category.services|length }}</small></a>
+            {% endfor %}
+          </nav>
+          <div class="sidebar-benefits">
+            <h3>Service benefits</h3>
+            <p><span>✓</span> Verified professionals</p>
+            <p><span>✓</span> Transparent pricing</p>
+            <p><span>✓</span> Easy online booking</p>
+          </div>
+        </aside>
+
+        <div class="catalog-main" id="serviceCatalog">
+          <div class="catalog-toolbar"><div><span class="section-kicker">Browse by need</span><h2>Carpentry services</h2></div><span class="service-total" id="serviceTotal">{{ total_services }} services</span></div>
+          <p class="empty-state" id="noResults" hidden>No services match that search. Try another term.</p>
+          {% for category in categories %}
+          <section class="service-category" id="{{ category.id }}" data-category-section="{{ category.title|lower }}">
+            <div class="category-heading"><span class="category-heading-icon" aria-hidden="true">{{ category.icon }}</span><h2>{{ category.title }}</h2><span>{{ category.services|length }} services</span></div>
+            <div class="service-grid">
+              {% for service in category.services %}
+              <article class="service-card" data-service-card data-search="{{ service.name|lower }} {{ category.title|lower }} {{ service.description|lower }}">
+                <button class="service-photo" type="button" data-photo="{{ url_for('assets', filename=service.photo_path) }}" data-caption="{{ service.name }}" aria-label="View photo for {{ service.name }}">
+                  <img src="{{ url_for('assets', filename=service.photo_path) }}" alt="Carpentry work for {{ service.name }}" loading="lazy">
+                  <span class="photo-zoom" aria-hidden="true">⌕</span>
+                </button>
+                <div class="service-card-heading"><h3>{{ service.name }}</h3><span class="service-icon" aria-hidden="true">{{ category.icon }}</span></div>
+                <p class="service-rating"><span aria-hidden="true">★</span> {{ service.rating }}</p>
+                <p class="service-description">{{ service.description }}</p>
+                <div class="service-card-footer"><p class="service-price">{% if service.starting %}<small>Starts at</small>{% endif %}<strong>₹{{ '{:,}'.format(service.price) }}</strong></p><button class="add-button" type="button" data-add-service data-name="{{ service.name }}" data-price="{{ service.price }}">ADD <span aria-hidden="true">+</span></button></div>
+              </article>
+              {% endfor %}
+            </div>
+          </section>
+          {% endfor %}
+        </div>
+      </div>
+
+      <section class="extras-section" aria-labelledby="extrasTitle">
+        <div class="extras-heading"><div><span class="section-kicker">More carpenter services</span><h2 id="extrasTitle">Book a Carpenter</h2></div><p>Choose a service and schedule a convenient visit</p></div>
+        <div class="extras-list">
+          {% for service in add_ons %}
+          <article class="extra-service" data-service-card data-search="{{ service.name|lower }} carpenter assembly">
+            <span class="extra-icon" aria-hidden="true">{% if 'Consultation' in service.name %}♧{% elif 'TV' in service.name %}▣{% elif 'Hanger' in service.name %}⌁{% else %}🪑{% endif %}</span>
+            <div><h3>{{ service.name }}</h3><p>{{ service.description }}</p></div>
+            <strong>₹{{ '{:,}'.format(service.price) }}</strong>
+            <button class="add-button" type="button" data-add-service data-name="{{ service.name }}" data-price="{{ service.price }}">ADD <span aria-hidden="true">+</span></button>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="review-panel" aria-label="Ratings and reviews"><div><span class="section-kicker">Ratings and reviews</span><h2><span>★</span> 4.78 / 5</h2><p>Based on 102.7K+ customer ratings</p></div><div class="rating-bars"><p><span>Service quality</span><i><b style="width:94%"></b></i><strong>4.8</strong></p><p><span>On-time arrival</span><i><b style="width:91%"></b></i><strong>4.7</strong></p></div></section>
+
+      <section class="promise-panel"><div class="promise-mark" aria-hidden="true">✓</div><div><span class="section-kicker">The NoBroker promise</span><h2>Home repairs, made easier</h2></div><p>Verified professionals <span>·</span> Upfront prices <span>·</span> Convenient online booking</p></section>
+
+      <section class="faq-section" aria-labelledby="faqTitle"><span class="section-kicker">Helpful answers</span><h2 id="faqTitle">Frequently asked questions</h2>
+        <details><summary>How do I book a carpenter in Pune?<span>+</span></summary><p>Add a service to your cart, select Book services, and enter your contact details and preferred date. A service professional will confirm the visit.</p></details>
+        <details><summary>What are typical carpenter charges in Pune?<span>+</span></summary><p>Prices shown are starting labour charges for the listed task. The professional will confirm the scope and any material costs before work begins.</p></details>
+        <details><summary>Can I book a carpenter for same-day service?<span>+</span></summary><p>Available visit slots depend on your location and service. Add a service and share your preferred date so the team can confirm availability.</p></details>
+        <details><summary>Are your carpenters experienced with modular furniture?<span>+</span></summary><p>Carpenters can help with furniture assembly, cupboard fittings and common household woodwork. Confirm any specialist requirements during booking.</p></details>
+        <details><summary>Do you offer both residential and office carpentry?<span>+</span></summary><p>Yes. The listed repair, installation and assembly services can be requested for homes and offices.</p></details>
+        <details><summary>Is material cost included in the service?<span>+</span></summary><p>Material charges are separate. The professional will share the estimate before proceeding.</p></details>
+        <details><summary>Can I reschedule my booking?<span>+</span></summary><p>Use the booking confirmation details to contact the service team and request a change to your visit time.</p></details>
+        <details><summary>Do your carpenters bring tools with them?<span>+</span></summary><p>Carpenters arrive with tools for standard service tasks. Any special material or parts required will be confirmed separately.</p></details>
+        <details><summary>Is there a warranty on the work?<span>+</span></summary><p>The page shows a 60-day warranty on eligible services. The exact coverage depends on the selected service and will be confirmed before booking.</p></details>
+        <details><summary>Why choose NoBroker over a local carpenter shop?<span>+</span></summary><p>Compare service prices up front, choose from verified professionals, and request a visit online.</p></details>
+      </section>
+    </div>
+  </main>
+
+  <div class="modal-backdrop" id="bookingModal" hidden>
+    <section class="dialog booking-dialog" role="dialog" aria-modal="true" aria-labelledby="bookingTitle">
+      <button class="dialog-close" type="button" data-close-modal aria-label="Close">×</button>
+      <span class="section-kicker">Book a service</span><h2 id="bookingTitle">Complete your booking</h2>
+      <p class="booking-summary" id="bookingSummary"></p>
+      <form id="bookingForm">
+        <label>Your name<input name="name" autocomplete="name" required placeholder="Enter your full name"></label>
+        <label>Phone number<input name="phone" inputmode="tel" pattern="[0-9+ -]{10,15}" required placeholder="Enter your phone number"></label>
+        <label>Preferred date<input name="date" type="date"></label>
+        <p class="form-error" id="bookingError" role="alert"></p>
+        <button class="primary-button" type="submit">Confirm booking</button>
+      </form>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="photoModal" hidden>
+    <section class="dialog photo-dialog" role="dialog" aria-modal="true" aria-labelledby="photoCaption">
+      <button class="dialog-close" type="button" data-close-modal aria-label="Close">×</button>
+      <img id="largePhoto" src="" alt="">
+      <p id="photoCaption"></p>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="bookingsModal" hidden>
+    <section class="dialog bookings-dialog" role="dialog" aria-modal="true" aria-labelledby="bookingsTitle">
+      <button class="dialog-close" type="button" data-close-modal aria-label="Close">×</button>
+      <span class="section-kicker">Your activity</span><h2 id="bookingsTitle">My bookings</h2>
+      <div id="bookingsList" class="bookings-list"><p>Loading bookings…</p></div>
+    </section>
+  </div>
+
+  <div class="cart-backdrop" id="cartBackdrop" hidden>
+    <aside class="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+      <div class="cart-heading"><div><span class="section-kicker">Your selections</span><h2 id="cartTitle">Service cart</h2></div><button type="button" data-close-cart aria-label="Close cart">×</button></div>
+      <div id="cartItems" class="cart-items"><p class="cart-empty">Your cart is empty. Add a service to get started.</p></div>
+      <div class="cart-footer"><p><span>Estimated total</span><strong id="cartTotal">₹0</strong></p><small>Final charges may include approved materials or additional work.</small><button class="primary-button" type="button" data-checkout>Book services</button></div>
+    </aside>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const cart = new Map();
+    let pendingBooking = { name: "Carpenter consultation", price: 0 };
+    let toastTimer;
+
+    const money = amount => `₹${Number(amount).toLocaleString('en-IN')}`;
+    const visibleCards = () => [...document.querySelectorAll('[data-service-card]')];
+
+    document.getElementById('serviceSearch').addEventListener('input', event => {
+      const query = event.target.value.trim().toLowerCase();
+      let count = 0;
+      for (const card of visibleCards()) {
+        const matches = card.dataset.search.includes(query);
+        card.hidden = !matches;
+        if (matches) count += 1;
+      }
+      document.querySelectorAll('.service-category').forEach(section => {
+        section.hidden = !section.querySelector('[data-service-card]:not([hidden])');
+      });
+      document.getElementById('serviceTotal').textContent = `${count} ${count === 1 ? 'service' : 'services'}`;
+      document.getElementById('noResults').hidden = count !== 0;
+    });
+
+    document.addEventListener('click', event => {
+      const addButton = event.target.closest('[data-add-service]');
+      if (addButton) {
+        const name = addButton.dataset.name;
+        const price = Number(addButton.dataset.price);
+        cart.set(name, (cart.get(name) || 0) + 1);
+        updateCart();
+        addButton.classList.add('is-added');
+        addButton.innerHTML = 'ADDED <span aria-hidden="true">✓</span>';
+        showToast(`${name} added to your cart`);
+      }
+
+      const photoButton = event.target.closest('[data-photo]');
+      if (photoButton) {
+        const image = document.getElementById('largePhoto');
+        image.src = photoButton.dataset.photo;
+        image.alt = photoButton.dataset.caption;
+        document.getElementById('photoCaption').textContent = photoButton.dataset.caption;
+        document.getElementById('photoModal').hidden = false;
+      }
+
+      const bookingButton = event.target.closest('[data-open-booking]');
+      if (bookingButton) openBooking(bookingButton.dataset.service, 0);
+      if (event.target.closest('[data-open-bookings]')) openBookings();
+      if (event.target.closest('[data-open-cart]')) openCart();
+      if (event.target.closest('[data-close-modal]')) closeDialogs();
+      if (event.target.closest('[data-close-cart]') || event.target.id === 'cartBackdrop') closeCart();
+      if (event.target.closest('[data-checkout]')) checkout();
+    });
+
+    function updateCart() {
+      const count = [...cart.values()].reduce((sum, quantity) => sum + quantity, 0);
+      document.getElementById('cartCount').textContent = count;
+      const container = document.getElementById('cartItems');
+      if (!count) {
+        container.innerHTML = '<p class="cart-empty">Your cart is empty. Add a service to get started.</p>';
+      } else {
+        container.innerHTML = [...cart.entries()].map(([name, quantity]) => {
+          const button = [...document.querySelectorAll('[data-add-service]')].find(item => item.dataset.name === name);
+          const price = Number(button?.dataset.price || 0);
+          return `<article class="cart-line"><div><strong>${escapeHtml(name)}</strong><span>${quantity} × ${money(price)}</span></div><strong>${money(quantity * price)}</strong><button type="button" data-remove="${escapeHtml(name)}" aria-label="Remove ${escapeHtml(name)}">×</button></article>`;
+        }).join('');
+      }
+      const total = [...cart.entries()].reduce((sum, [name, quantity]) => {
+        const button = [...document.querySelectorAll('[data-add-service]')].find(item => item.dataset.name === name);
+        return sum + quantity * Number(button?.dataset.price || 0);
+      }, 0);
+      document.getElementById('cartTotal').textContent = money(total);
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+    }
+
+    function openCart() { document.getElementById('cartBackdrop').hidden = false; }
+    function closeCart() { document.getElementById('cartBackdrop').hidden = true; }
+
+    function checkout() {
+      if (!cart.size) {
+        showToast('Add a service before booking');
+        return;
+      }
+      const names = [...cart.keys()];
+      pendingBooking = { name: names.join(', '), price: Number(document.getElementById('cartTotal').textContent.replace(/[^0-9]/g, '')) };
+      closeCart();
+      openBooking(pendingBooking.name, pendingBooking.price);
+    }
+
+    function openBooking(name, price) {
+      pendingBooking = { name, price };
+      document.getElementById('bookingSummary').textContent = name + (price ? ` · Estimated total ${money(price)}` : '');
+      document.getElementById('bookingError').textContent = '';
+      document.getElementById('bookingModal').hidden = false;
+    }
+
+    function closeDialogs() {
+      document.getElementById('bookingModal').hidden = true;
+      document.getElementById('photoModal').hidden = true;
+      document.getElementById('bookingsModal').hidden = true;
+    }
+
+    async function openBookings() {
+      const modal = document.getElementById('bookingsModal');
+      const list = document.getElementById('bookingsList');
+      modal.hidden = false;
+      list.innerHTML = '<p>Loading bookings…</p>';
+      try {
+        const response = await fetch('/bookings');
+        if (!response.ok) throw new Error('Could not load bookings. Please try again.');
+        const bookings = await response.json();
+        document.getElementById('bookingCount').textContent = bookings.length;
+        list.innerHTML = bookings.length ? bookings.slice().reverse().map(booking => `
+          <article class="booking-entry"><strong>${escapeHtml(booking.service || 'Home service')}</strong>
+            <span>${escapeHtml(booking.date || 'Date to be confirmed')} · ${escapeHtml(booking.city || 'Pune')}</span>
+            <small>Booked for ${escapeHtml(booking.name || 'Customer')}</small>
+          </article>`).join('') : '<p class="cart-empty">No bookings yet. Add a carpenter service and book a visit to see it here.</p>';
+      } catch (error) {
+        list.innerHTML = `<p class="form-error">${escapeHtml(error.message)}</p>`;
+      }
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('visible');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('visible'), 2600);
+    }
+
+    document.getElementById('bookingForm').addEventListener('submit', async event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const fields = new FormData(form);
+      const submit = form.querySelector('[type="submit"]');
+      submit.disabled = true;
+      document.getElementById('bookingError').textContent = '';
+      try {
+        const response = await fetch('/book', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            service: pendingBooking.name,
+            name: fields.get('name'),
+            phone: fields.get('phone'),
+            date: fields.get('date'),
+            city: document.querySelector('.location-button').textContent.trim().replace('⌄', '').trim()
+          })
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || 'Could not confirm your booking.');
+        document.getElementById('bookingCount').textContent = result.total;
+        cart.clear();
+        updateCart();
+        document.querySelectorAll('[data-add-service]').forEach(button => {
+          button.classList.remove('is-added');
+          button.innerHTML = 'ADD <span aria-hidden="true">+</span>';
+        });
+        form.reset();
+        closeDialogs();
+        showToast('Your booking request has been submitted');
+      } catch (error) {
+        document.getElementById('bookingError').textContent = error.message;
+      } finally {
+        submit.disabled = false;
+      }
+    });
+
+    document.addEventListener('click', event => {
+      const removeButton = event.target.closest('[data-remove]');
+      if (!removeButton) return;
+      cart.delete(removeButton.dataset.remove);
+      updateCart();
+      document.querySelectorAll('[data-add-service]').forEach(button => {
+        if (button.dataset.name === removeButton.dataset.remove) {
+          button.classList.remove('is-added');
+          button.innerHTML = 'ADD <span aria-hidden="true">+</span>';
+        }
+      });
+    });
+
+    document.addEventListener('keydown', event => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        document.getElementById('serviceSearch').focus();
+      }
+      if (event.key === 'Escape') { closeDialogs(); closeCart(); }
+    });
+
+    const sections = [...document.querySelectorAll('.service-category')];
+    const activeCategory = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          document.querySelectorAll('[data-side-link]').forEach(link => link.classList.toggle('active', link.dataset.sideLink === entry.target.id));
+        }
+      }
+    }, { rootMargin: '-18% 0px -72% 0px' });
+    sections.forEach(section => activeCategory.observe(section));
+  </script>
+</body>
+</html>

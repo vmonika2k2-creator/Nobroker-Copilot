@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Full Home Cleaning Service in Pune | NoBroker Home Services</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='copilot.css') }}">
+</head>
+<body class="bg-gray-50 text-gray-800" style="font-family: Arial, sans-serif;">
+  <a href="/copilot?room=Full%20House" class="copilot-fab" title="Need help deciding? Launch AI Copilot"><span class="copilot-fab__dot"></span>✦ Need Help? Ask Copilot</a>
+
+  <!-- Navbar -->
+  <header class="bg-white shadow-sm sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto flex items-center justify-between px-5 py-3">
+      <a href="/" class="font-bold text-lg"><span>🚫</span> <span class="text-[#fd3752]">NOBROKER</span> <span class="font-normal text-gray-600">Home Services</span></a>
+      <div class="flex items-center gap-5 text-sm font-medium">
+        <span id="cityLabel">Pune</span>
+        <a href="/" class="hover:text-[#fd3752]">← Back to services</a>
+        <button id="cartBtn" class="relative rounded-full bg-teal-600 text-white px-4 py-2 font-semibold">
+          🛒 Cart <span id="cartCount" class="ml-1 bg-white text-teal-700 rounded-full px-2 text-xs">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-5 py-6">
+
+    <h1 class="text-3xl font-bold mb-1">Full Home Cleaning Service in Pune</h1>
+    <p class="text-gray-500 mb-5">★ 4.74 · 180K+ reviews · Best price · Free cancellation · 5 star rated partners</p>
+
+    <!-- Search -->
+    <input id="search" type="text" placeholder="Search a package or service (e.g. Premium, Fridge, Balcony)…"
+           class="w-full rounded-full border border-gray-200 bg-white px-5 py-3 mb-5 outline-none focus:border-teal-600">
+
+    <!-- Category tabs -->
+    <nav id="tabs" class="flex flex-wrap gap-3 mb-8"></nav>
+
+    <!-- Sections are rendered here from /api/full-house-cleaning -->
+    <div id="sections" class="space-y-10"></div>
+    <p id="noResults" class="hidden text-center text-gray-500 py-10">No services match your search.</p>
+
+    <!-- Ratings -->
+    <section class="mt-14 bg-white rounded-2xl p-6">
+      <h2 class="text-2xl font-bold mb-4">Ratings &amp; Reviews</h2>
+      <div class="flex flex-wrap gap-10">
+        <div class="text-center">
+          <div class="text-5xl font-bold">4.74</div>
+          <div class="text-gray-500 text-sm">avg rating</div>
+          <div class="text-gray-500 text-sm">180,108 reviews</div>
+        </div>
+        <div id="ratingBars" class="flex-1 min-w-[260px] space-y-2"></div>
+      </div>
+      <div id="reviews" class="grid md:grid-cols-2 gap-4 mt-6"></div>
+      <button id="moreReviews" class="mt-4 rounded-full border border-gray-300 px-5 py-2 font-semibold">Show More</button>
+    </section>
+
+    <!-- Promise -->
+    <section class="mt-8 grid md:grid-cols-3 gap-4">
+      <div class="bg-white rounded-2xl p-5 text-center"><div class="text-3xl">₹</div><div class="font-semibold">Best Price</div></div>
+      <div class="bg-white rounded-2xl p-5 text-center"><div class="text-3xl">↩️</div><div class="font-semibold">Free Cancellation</div></div>
+      <div class="bg-white rounded-2xl p-5 text-center"><div class="text-3xl">⭐</div><div class="font-semibold">5 Star Rated Partner</div></div>
+    </section>
+    <section class="mt-4 bg-white rounded-2xl p-6">
+      <h3 class="font-bold text-lg mb-2">Why NoBroker?</h3>
+      <ol class="list-decimal ml-5 space-y-1 text-gray-700">
+        <li>Use of top quality, specialised &amp; safe chemicals</li>
+        <li>Use of mechanised and professional equipment</li>
+        <li>Experienced, trained and background verified partners</li>
+      </ol>
+    </section>
+
+    <!-- Included / Not included -->
+    <section class="mt-8 bg-white rounded-2xl p-6">
+      <h2 class="text-2xl font-bold mb-4">What our home cleaning experts will do?</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="font-semibold text-teal-700 mb-2">✔ What's Included</h3>
+          <ul id="included" class="space-y-2 text-gray-700 list-disc ml-5"></ul>
+        </div>
+        <div>
+          <h3 class="font-semibold text-[#fd3752] mb-2">✖ What's Not Included</h3>
+          <ul id="notIncluded" class="space-y-2 text-gray-700 list-disc ml-5"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="mt-8 bg-white rounded-2xl p-6">
+      <h2 class="text-2xl font-bold mb-4">Frequently asked questions</h2>
+      <div id="faqs" class="divide-y"></div>
+    </section>
+  </main>
+
+  <!-- Sticky cart bar -->
+  <div id="cartBar" class="hidden fixed bottom-0 inset-x-0 z-30 bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.1)]">
+    <div class="max-w-6xl mx-auto flex items-center justify-between px-5 py-3">
+      <div><span id="barItems" class="font-semibold"></span> · <span id="barTotal" class="font-bold text-lg"></span></div>
+      <button onclick="openCheckout()" class="rounded-full bg-teal-600 text-white font-semibold px-6 py-2">View cart &amp; book</button>
+    </div>
+  </div>
+
+  <!-- Details modal -->
+  <div id="detailsModal" class="hidden fixed inset-0 z-40 bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl p-6 w-[480px] max-w-full max-h-[85vh] overflow-auto">
+      <div class="flex justify-between items-start mb-3">
+        <h3 id="detailsTitle" class="text-xl font-bold"></h3>
+        <button onclick="closeModal('detailsModal')" class="text-2xl leading-none">✕</button>
+      </div>
+      <p id="detailsMeta" class="text-sm text-gray-500 mb-3"></p>
+      <ul id="detailsList" class="list-disc ml-5 space-y-1 text-gray-700 mb-4"></ul>
+      <button id="detailsAdd" class="rounded-full bg-teal-600 text-white font-semibold px-6 py-2"></button>
+    </div>
+  </div>
+
+  <!-- Cart + checkout modal -->
+  <div id="checkoutModal" class="hidden fixed inset-0 z-40 bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl p-6 w-[520px] max-w-full max-h-[90vh] overflow-auto">
+      <div class="flex justify-between items-start mb-3">
+        <h3 class="text-xl font-bold">Your cart</h3>
+        <button onclick="closeModal('checkoutModal')" class="text-2xl leading-none">✕</button>
+      </div>
+      <div id="cartItems" class="divide-y mb-3"></div>
+      <div class="flex justify-between font-bold text-lg mb-4"><span>Total</span><span id="cartTotal"></span></div>
+
+      <div id="checkoutForm" class="space-y-3">
+        <input id="custName" placeholder="Your full name" class="w-full border rounded-lg px-3 py-2">
+        <input id="custPhone" placeholder="10-digit mobile number" inputmode="numeric" maxlength="10" class="w-full border rounded-lg px-3 py-2">
+        <input id="custAddress" placeholder="Address (flat, building, area)" class="w-full border rounded-lg px-3 py-2">
+        <div class="grid grid-cols-2 gap-3">
+          <input id="custDate" type="date" class="border rounded-lg px-3 py-2">
+          <select id="custSlot" class="border rounded-lg px-3 py-2">
+            <option>9:00 AM – 12:00 PM</option>
+            <option>12:00 PM – 3:00 PM</option>
+            <option>3:00 PM – 6:00 PM</option>
+          </select>
+        </div>
+        <p id="formError" class="text-sm text-red-600 hidden"></p>
+        <button id="confirmBtn" onclick="confirmBooking()" class="w-full rounded-full bg-teal-600 text-white font-semibold py-3">Confirm booking</button>
+      </div>
+
+      <div id="successBox" class="hidden text-center py-6">
+        <div class="text-5xl mb-2">✅</div>
+        <h4 class="text-xl font-bold mb-1">Booking confirmed!</h4>
+        <p id="successText" class="text-gray-600 mb-4"></p>
+        <button onclick="closeModal('checkoutModal')" class="rounded-full bg-teal-600 text-white font-semibold px-6 py-2">Done</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  let DATA = null;
+  const cart = {};          // id -> {id, name, price, qty}
+  let shownReviews = 4;
+
+  const inr = n => '₹' + Number(n).toLocaleString('en-IN');
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  async function init() {
+    DATA = await (await fetch('/api/full-house-cleaning')).json();
+    renderTabs(); renderSections(); renderReviews(); renderRatings(); renderInfo(); renderFaqs();
+    $('search').addEventListener('input', applySearch);
+    $('cartBtn').onclick = openCheckout;
+    $('moreReviews').onclick = () => { shownReviews += 4; renderReviews(); };
+    const d = new Date(); d.setDate(d.getDate() + 1);
+    $('custDate').min = d.toISOString().split('T')[0];
+  }
+
+  function renderTabs() {
+    $('tabs').innerHTML = DATA.sections.map(s => `
+      <button data-target="sec-${s.id}" class="tab rounded-full border border-gray-300 bg-white px-4 py-2 font-medium hover:border-teal-600">${esc(s.title)}</button>`).join('');
+    document.querySelectorAll('.tab').forEach(b => b.onclick = () => {
+      document.querySelectorAll('.tab').forEach(x => x.classList.remove('bg-teal-600','text-white','border-teal-600'));
+      b.classList.add('bg-teal-600','text-white','border-teal-600');
+      $(b.dataset.target).scrollIntoView({behavior: 'smooth', block: 'start'});
+    });
+  }
+
+  function cardHtml(it) {
+    const rating = it.rating ? `<span class="text-sm">⭐ ${esc(it.rating)}</span>` : '';
+    const dur = it.duration ? `<span class="text-sm text-gray-500">🕒 ${esc(it.duration)}</span>` : '';
+    const price = `${it.startsAt ? '<span class="text-xs text-gray-500">Starts at </span>' : ''}<span class="font-bold text-lg">${inr(it.price)}</span>`;
+    const bullets = (it.includes || []).slice(0, 4).map(i => `<li>${esc(i)}</li>`).join('');
+    return `
+    <div class="card bg-white rounded-2xl p-5 shadow-sm flex flex-col" data-search="${esc((it.name + ' ' + (it.includes||[]).join(' ')).toLowerCase())}">
+      <div class="flex justify-between items-start gap-2 mb-1">
+        <h4 class="font-semibold text-lg">${esc(it.name)}</h4>
+        <div class="flex flex-col items-end gap-1">${rating}${dur}</div>
+      </div>
+      <ul class="list-disc ml-5 text-sm text-gray-600 space-y-1 flex-1 my-2">${bullets}</ul>
+      <div class="flex items-center justify-between mt-3">
+        <div>${price}</div>
+        <div id="ctl-${it.id}"></div>
+      </div>
+      <button class="text-left text-sm text-teal-700 font-semibold mt-2" onclick="showDetails('${it.id}')">View details</button>
+    </div>`;
+  }
+
+  function renderSections() {
+    $('sections').innerHTML = DATA.sections.map(s => `
+      <section id="sec-${s.id}" class="scroll-mt-24 sec">
+        <h2 class="text-2xl font-bold mb-4">${esc(s.title)}</h2>
+        <div class="grid md:grid-cols-3 gap-4">${s.items.map(cardHtml).join('')}</div>
+      </section>`).join('');
+    DATA.sections.forEach(s => s.items.forEach(it => renderControl(it.id)));
+  }
+
+  function findItem(id) {
+    for (const s of DATA.sections) for (const it of s.items) if (it.id === id) return it;
+  }
+
+  function renderControl(id) {
+    const el = $('ctl-' + id); if (!el) return;
+    const q = cart[id] ? cart[id].qty : 0;
+    el.innerHTML = q === 0
+      ? `<button onclick="changeQty('${id}',1)" class="rounded-full border-2 border-teal-600 text-teal-700 font-bold px-5 py-1 hover:bg-teal-50">Add</button>`
+      : `<div class="flex items-center gap-3 rounded-full bg-teal-600 text-white font-bold px-3 py-1">
+           <button onclick="changeQty('${id}',-1)" class="text-xl leading-none px-1">−</button>
+           <span>${q}</span>
+           <button onclick="changeQty('${id}',1)" class="text-xl leading-none px-1">+</button>
+         </div>`;
+  }
+
+  function changeQty(id, delta) {
+    const it = findItem(id); if (!it) return;
+    const q = (cart[id] ? cart[id].qty : 0) + delta;
+    if (q <= 0) delete cart[id]; else cart[id] = {id, name: it.name, price: it.price, qty: q};
+    renderControl(id); updateCart();
+    if (!$('checkoutModal').classList.contains('hidden')) renderCartItems();
+  }
+
+  function cartTotals() {
+    const items = Object.values(cart);
+    return { count: items.reduce((a, i) => a + i.qty, 0), total: items.reduce((a, i) => a + i.qty * i.price, 0), items };
+  }
+
+  function updateCart() {
+    const t = cartTotals();
+    $('cartCount').textContent = t.count;
+    $('cartBar').classList.toggle('hidden', t.count === 0);
+    $('barItems').textContent = t.count + (t.count === 1 ? ' item' : ' items');
+    $('barTotal').textContent = inr(t.total);
+  }
+
+  function applySearch() {
+    const q = $('search').value.trim().toLowerCase();
+    let any = false;
+    document.querySelectorAll('.sec').forEach(sec => {
+      let visible = 0;
+      sec.querySelectorAll('.card').forEach(c => {
+        const show = !q || c.dataset.search.includes(q) || sec.querySelector('h2').textContent.toLowerCase().includes(q);
+        c.classList.toggle('hidden', !show); if (show) visible++;
+      });
+      sec.classList.toggle('hidden', visible === 0); if (visible) any = true;
+    });
+    $('noResults').classList.toggle('hidden', any);
+  }
+
+  function showDetails(id) {
+    const it = findItem(id);
+    $('detailsTitle').textContent = it.name;
+    $('detailsMeta').textContent = [it.duration && ('Duration: ' + it.duration), it.rating && ('Rating: ' + it.rating), (it.startsAt ? 'Starts at ' : 'Price: ') + inr(it.price)].filter(Boolean).join(' · ');
+    $('detailsList').innerHTML = (it.includes || []).map(i => `<li>${esc(i)}</li>`).join('');
+    $('detailsAdd').textContent = 'Add to cart · ' + inr(it.price);
+    $('detailsAdd').onclick = () => { changeQty(id, 1); closeModal('detailsModal'); };
+    $('detailsModal').classList.remove('hidden');
+  }
+
+  function closeModal(id) { $(id).classList.add('hidden'); }
+
+  function renderCartItems() {
+    const t = cartTotals();
+    $('cartItems').innerHTML = t.items.length ? t.items.map(i => `
+      <div class="flex items-center justify-between py-2">
+        <div class="pr-3"><div class="font-medium">${esc(i.name)}</div><div class="text-sm text-gray-500">${inr(i.price)} each</div></div>
+        <div class="flex items-center gap-2">
+          <button onclick="changeQty('${i.id}',-1)" class="w-7 h-7 rounded-full border">−</button>
+          <span class="w-5 text-center">${i.qty}</span>
+          <button onclick="changeQty('${i.id}',1)" class="w-7 h-7 rounded-full border">+</button>
+          <span class="w-20 text-right font-semibold">${inr(i.qty * i.price)}</span>
+        </div>
+      </div>`).join('') : '<p class="py-4 text-gray-500">Your cart is empty. Add a package to get started.</p>';
+    $('cartTotal').textContent = inr(t.total);
+    $('confirmBtn').disabled = t.items.length === 0;
+    $('confirmBtn').classList.toggle('opacity-50', t.items.length === 0);
+  }
+
+  function openCheckout() {
+    $('successBox').classList.add('hidden');
+    $('checkoutForm').classList.remove('hidden');
+    $('formError').classList.add('hidden');
+    renderCartItems();
+    $('checkoutModal').classList.remove('hidden');
+  }
+
+  function showError(msg) { const e = $('formError'); e.textContent = msg; e.classList.remove('hidden'); }
+
+  async function confirmBooking() {
+    const t = cartTotals();
+    const name = $('custName').value.trim(), phone = $('custPhone').value.trim(),
+          address = $('custAddress').value.trim(), date = $('custDate').value, slot = $('custSlot').value;
+    if (!t.items.length) return showError('Add at least one service first.');
+    if (!name || !address || !date) return showError('Please fill in your name, address and date.');
+    if (!/^[6-9]\d{9}$/.test(phone)) return showError('Enter a valid 10-digit Indian mobile number.');
+
+    $('confirmBtn').disabled = true; $('confirmBtn').textContent = 'Booking…';
+    try {
+      const res = await fetch('/book', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          service: t.items.map(i => i.name + (i.qty > 1 ? ' x' + i.qty : '')).join(', '),
+          name, phone, date, address, slot, city: 'Pune', total: t.total
+        })
+      });
+      if (!res.ok) throw new Error();
+      $('successText').textContent = `Thanks ${name}! ${t.count} item(s), ${inr(t.total)} — ${date}, ${slot}.`;
+      $('checkoutForm').classList.add('hidden'); $('successBox').classList.remove('hidden');
+      Object.keys(cart).forEach(id => { delete cart[id]; renderControl(id); });
+      updateCart();
+    } catch (e) {
+      showError('Something went wrong. Please try again.');
+    } finally {
+      $('confirmBtn').disabled = false; $('confirmBtn').textContent = 'Confirm booking';
+    }
+  }
+
+  function renderRatings() {
+    const total = DATA.ratings.reduce((a, r) => a + r.count, 0);
+    $('ratingBars').innerHTML = DATA.ratings.map(r => `
+      <div class="flex items-center gap-3 text-sm">
+        <span class="w-4">${r.stars}</span>
+        <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden"><div class="h-2 bg-teal-600" style="width:${(r.count / total * 100).toFixed(1)}%"></div></div>
+        <span class="w-16 text-right text-gray-500">${r.count.toLocaleString('en-IN')}</span>
+      </div>`).join('');
+  }
+
+  function renderReviews() {
+    $('reviews').innerHTML = DATA.reviews.slice(0, shownReviews).map(r => `
+      <div class="border rounded-xl p-4">
+        <div class="flex justify-between"><span class="font-semibold">${esc(r.name)}</span><span>⭐ ${r.stars}</span></div>
+        <div class="text-xs text-gray-500 mb-1">${esc(r.date)} • ${esc(r.service)}</div>
+        <p class="text-sm text-gray-700">${esc(r.text)}</p>
+      </div>`).join('');
+    $('moreReviews').classList.toggle('hidden', shownReviews >= DATA.reviews.length);
+  }
+
+  function renderInfo() {
+    $('included').innerHTML = DATA.included.map(i => `<li>${esc(i)}</li>`).join('');
+    $('notIncluded').innerHTML = DATA.not_included.map(i => `<li>${esc(i)}</li>`).join('');
+  }
+
+  function renderFaqs() {
+    $('faqs').innerHTML = DATA.faqs.map((f, i) => `
+      <div class="py-3">
+        <button class="w-full flex justify-between text-left font-semibold" onclick="toggleFaq(${i})">
+          <span>${esc(f.q)}</span><span id="faqIcon${i}">+</span>
+        </button>
+        <p id="faqA${i}" class="hidden mt-2 text-gray-600 text-sm">${esc(f.a)}</p>
+      </div>`).join('');
+  }
+
+  function toggleFaq(i) {
+    const a = $('faqA' + i), open = a.classList.toggle('hidden') === false;
+    $('faqIcon' + i).textContent = open ? '−' : '+';
+  }
+
+  init();
+</script>
+</body>
+</html>

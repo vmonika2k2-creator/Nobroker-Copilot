@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NoBroker Home Services Clone</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='copilot.css') }}">
+</head>
+<body>
+    <a href="/copilot" class="copilot-fab" title="Need help deciding? Launch AI Copilot">
+        <span class="copilot-fab__dot"></span>
+        ✦ Need Help? Ask Copilot
+    </a>
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="nav-left">
+            <span class="logo">🚫 <strong>NOBROKER</strong> <span class="sub-logo">Home Services</span></span>
+        </div>
+        <div class="nav-right">
+            <select class="city-select">
+                <option>Pune</option>
+                <option>Bangalore</option>
+                <option>Hyderabad</option>
+                <option>Mumbai</option>
+            </select>
+            <a href="#">📋 My Bookings</a>
+            <a href="#">Sign Up</a>
+            <a href="#">Log In</a>
+            <a href="#">☰ Menu</a>
+        </div>
+    </header>
+
+    <!-- Search Bar -->
+    <section class="search-section">
+        <div class="search-box">
+            <span>🔍</span>
+            <input type="text" placeholder="Search Bathroom Cleaning, Painting, etc...">
+        </div>
+    </section>
+
+    <!-- Main Hero Grid -->
+    <main class="container">
+        <div class="hero-grid">
+            <!-- Left: Service Icons -->
+            <div class="services-grid">
+                {% for service in services %}
+                <a class="service-card" href="{{ service.href }}"
+                   {% if service.name == 'Home Cleaning' %}onclick="openServicePopup(event, 'cleaning')"
+                   {% elif service.name == 'Painting' %}onclick="openServicePopup(event, 'painting')"
+                   {% elif service.name == 'Electrician, Plumber & Carpenter' %}onclick="openServicePopup(event, 'trades')"
+                   {% elif service.name == 'AC & Appliance Repair' %}onclick="openServicePopup(event, 'appliances')"{% endif %}>
+                    {% if service.tag %}
+                        <span class="badge">{{ service.tag }}</span>
+                    {% else %}
+                        <span class="badge-empty"></span>
+                    {% endif %}
+                    <div class="icon-circle">{{ service.icon }}</div>
+                    <p>{{ service.name }}</p>
+                </a>
+                {% endfor %}
+            </div>
+
+            <!-- Right: Featured Promo Banner -->
+            <div class="promo-banner">
+                <div class="promo-overlay">
+                    <span>Cleaning Services</span>
+                    <button class="btn-teal">Book</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Offers Section -->
+        <section class="offers-section">
+            <h2>Offers for you</h2>
+            <div class="offers-grid">
+                {% for offer in offers %}
+                <div class="offer-card {{ offer.theme }}">
+                    <small>{{ offer.badge }}</small>
+                    <h3>{{ offer.title }}</h3>
+                    <button>{{ offer.btn }}</button>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+
+    <div class="service-modal" id="serviceModal" hidden>
+        <div class="service-modal__panel" role="dialog" aria-modal="true" aria-labelledby="serviceModalTitle">
+            <button class="service-modal__close" type="button" onclick="closeServicePopup()" aria-label="Close">×</button>
+            <h2 id="serviceModalTitle">Choose a service</h2>
+            <p id="serviceModalHint">Select the service you need.</p>
+            <div class="service-modal__list" id="serviceModalList"></div>
+        </div>
+    </div>
+
+    <script>
+        const popupConfig = {
+            cleaning: { title: 'Home Cleaning Services', hint: 'Choose a cleaning service', endpoint: '/api/cleaning-services' },
+            painting: { title: 'Painting Services', hint: 'Choose a painting service', endpoint: '/api/painting-services' },
+            trades: { title: 'Electrician, Plumber & Carpenter', hint: 'Choose a home repair service', endpoint: '/api/trade-services' },
+            appliances: { title: 'AC & Appliance Repair', hint: 'Choose the type of service you need', endpoint: '/api/appliance-services' }
+        };
+        const popupRoutes = {
+            'Full House Cleaning Services': '/full-house-cleaning',
+            'Kitchen Services': '/kitchen-cleaning',
+            'Sofa Cleaning Services': '/sofa-cleaning',
+            'Bathroom Cleaning Services': '/bathroom-cleaning',
+            'Premium Painting': '/premium-painting',
+            'Painting Services': '/painting-services',
+            'Electrician': '/electrician',
+            'Plumber': '/plumber',
+            'Carpenter': '/carpenter',
+            'AC Services': '/ac-services',
+            'Appliance Services': '/appliances'
+        };
+        async function openServicePopup(event, type) {
+            event.preventDefault();
+            const config = popupConfig[type];
+            const response = await fetch(config.endpoint);
+            const services = await response.json();
+            document.getElementById('serviceModalTitle').textContent = config.title;
+            document.getElementById('serviceModalHint').textContent = config.hint;
+            document.getElementById('serviceModalList').innerHTML = services.map(service => `
+                <button class="service-modal__item" type="button" onclick="choosePopupService('${service.name.replace(/'/g, "\\'")}')">
+                    <span class="service-modal__icon">${service.icon || '✦'}</span>
+                    <span><strong>${service.name}</strong><small>${service.desc || ''}</small></span>
+                </button>`).join('');
+            document.getElementById('serviceModal').hidden = false;
+        }
+        function choosePopupService(name) {
+            window.location.href = popupRoutes[name] || '/';
+        }
+        function closeServicePopup() { document.getElementById('serviceModal').hidden = true; }
+        document.getElementById('serviceModal').addEventListener('click', event => {
+            if (event.target.id === 'serviceModal') closeServicePopup();
+        });
+    </script>
+</body>
+</html>

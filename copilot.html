@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NoBroker Copilot — Smart Service Guide</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='copilot.css') }}">
+</head>
+<body>
+
+<!-- ══════════════ TOPBAR ══════════════ -->
+<header class="cp-topbar">
+  <div class="cp-brand">
+    🚫 NOBROKER <small>Copilot · Smart Home Guide</small>
+  </div>
+  <div class="cp-topbar-actions">
+    <span id="cpSelectedCount" style="font-size:.8rem;color:#927866;"></span>
+    <a href="/" class="cp-btn-ghost">← Back to Services</a>
+  </div>
+</header>
+<div class="cp-progress"><div class="cp-progress__fill" id="cpProgress"></div></div>
+
+<!-- ══════════════ MAIN SHELL ══════════════ -->
+<div class="cp-shell">
+
+  <!-- ───── STEP 1: Select Rooms ───── -->
+  <section class="cp-step is-active" id="step1">
+    <div class="cp-eyebrow">✦ Copilot · Step 1 of 3</div>
+    <h1 class="cp-heading">Which rooms need attention?</h1>
+    <p class="cp-lead">
+      Select one or more rooms. Our AI will suggest the right services for each room —
+      no need to know the service name in advance.
+    </p>
+
+    <div class="room-grid" id="roomGrid">
+      <button class="room-card" data-room="Living Room" onclick="toggleRoom(this)">
+        <span class="room-card__icon">🛋️</span>
+        <strong>Living Room</strong>
+        <small>Walls, sofa, fixtures, lights</small>
+        <span class="room-card__check">✓</span>
+      </button>
+      <button class="room-card" data-room="Kitchen" onclick="toggleRoom(this)">
+        <span class="room-card__icon">🍽️</span>
+        <strong>Kitchen</strong>
+        <small>Tiles, cabinets, chimney, sink</small>
+        <span class="room-card__check">✓</span>
+      </button>
+      <button class="room-card" data-room="Bathroom" onclick="toggleRoom(this)">
+        <span class="room-card__icon">🚿</span>
+        <strong>Bathroom</strong>
+        <small>Fittings, tiles, drains, seepage</small>
+        <span class="room-card__check">✓</span>
+      </button>
+      <button class="room-card" data-room="Bedroom" onclick="toggleRoom(this)">
+        <span class="room-card__icon">🛏️</span>
+        <strong>Bedroom</strong>
+        <small>Walls, wardrobe, fan, AC</small>
+        <span class="room-card__check">✓</span>
+      </button>
+      <button class="room-card" data-room="Balcony" onclick="toggleRoom(this)">
+        <span class="room-card__icon">🌿</span>
+        <strong>Balcony</strong>
+        <small>Tiles, railings, waterproofing</small>
+        <span class="room-card__check">✓</span>
+      </button>
+      <button class="room-card" data-room="Pooja Room" onclick="toggleRoom(this)">
+        <span class="room-card__icon">🪔</span>
+        <strong>Pooja Room</strong>
+        <small>Deep clean, smoke marks, shelves</small>
+        <span class="room-card__check">✓</span>
+      </button>
+      <button class="room-card" data-room="Study / Office" onclick="toggleRoom(this)">
+        <span class="room-card__icon">💻</span>
+        <strong>Study / Office</strong>
+        <small>Dust, electrical, shelves</small>
+        <span class="room-card__check">✓</span>
+      </button>
+      <button class="room-card" data-room="Full House" onclick="toggleRoom(this)">
+        <span class="room-card__icon">🏠</span>
+        <strong>Full House</strong>
+        <small>All rooms, complete refresh</small>
+        <span class="room-card__check">✓</span>
+      </button>
+    </div>
+
+    <div class="cp-actions">
+      <button class="cp-btn-primary" id="step1Next" onclick="goStep2()" disabled>
+        Continue →
+      </button>
+      <span class="cp-hint">Select at least one room</span>
+    </div>
+  </section>
+
+  <!-- ───── STEP 2: Choose mode (photos or not) ───── -->
+  <section class="cp-step" id="step2">
+    <div class="cp-eyebrow">✦ Copilot · Step 2 of 3</div>
+    <h1 class="cp-heading">How would you like to proceed?</h1>
+    <p class="cp-lead">
+      Our AI works either way — with photos it can spot specific issues;
+      without, it'll guide you through smart questions.
+    </p>
+
+    <div class="mode-grid">
+      <div class="mode-card" onclick="chooseMode('photos')">
+        <span class="mode-card__emoji">📸</span>
+        <strong>Share room photos</strong>
+        <p>Upload photos of your rooms. The AI will detect issues and suggest the most relevant services with reasons.</p>
+      </div>
+      <div class="mode-card" onclick="chooseMode('questions')">
+        <span class="mode-card__emoji">💬</span>
+        <strong>Skip photos, use questions</strong>
+        <p>No photos needed. We'll show possible services for your selected rooms — just tick what applies to you.</p>
+      </div>
+    </div>
+
+    <div class="cp-actions">
+      <button class="cp-btn-ghost" onclick="goStep1()">← Back</button>
+    </div>
+  </section>
+
+  <!-- ───── STEP 3: Workspace (two-pane) ───── -->
+  <section class="cp-step" id="step3">
+    <div class="cp-eyebrow">✦ Copilot · Step 3 of 3 — Your Service Checklist</div>
+
+    <div class="cp-workspace" style="margin-top:22px;">
+
+      <!-- Sidebar: room list -->
+      <aside class="cp-sidebar">
+        <p class="cp-sidebar__label">Your rooms</p>
+        <div class="cp-sidebar__list" id="cpSidebar"></div>
+      </aside>
+
+      <!-- Main panel -->
+      <div class="cp-main">
+        <div class="cp-main__header">
+          <div>
+            <h2 id="cpRoomTitle">Room</h2>
+            <small id="cpRoomSub">Select services that apply to this room</small>
+          </div>
+          <button class="cp-rename-btn" onclick="renameRoom()">✏️ Rename room</button>
+        </div>
+
+        <!-- Photo section (shown only in photo mode) -->
+        <div class="cp-photo-section" id="cpPhotoSection" style="display:none;">
+          <div class="cp-photo-section__head">
+            <h3>📸 Room Photos</h3>
+            <label for="cpPhotoInput" class="cp-btn-ghost" style="cursor:pointer;">+ Add Photos</label>
+            <input type="file" id="cpPhotoInput" accept="image/*" multiple style="display:none;" onchange="handlePhotoUpload(event)">
+          </div>
+          <p class="cp-photo-label">Upload photos of this room. The AI will analyze them and highlight relevant services below.</p>
+
+          <div class="cp-photo-grid" id="cpPhotoGrid">
+            <label for="cpPhotoInput" class="cp-photo-add">
+              <span>+</span>
+              Add Photos
+            </label>
+          </div>
+
+          <div class="cp-ai-status" id="cpAiStatus" style="display:none;">
+            <div class="spinner"></div>
+            <span id="cpAiStatusText">Analyzing your photos…</span>
+          </div>
+        </div>
+
+        <!-- Service recommendations -->
+        <div class="cp-services-section">
+          <div class="cp-services-section__head">
+            <h3>🎯 Recommended Services</h3>
+            <p id="cpServicesSubtitle">Based on your room, here are the most common services needed. Tick what applies.</p>
+          </div>
+          <div id="cpServicesList">
+            <div class="cp-loading"><div class="spinner"></div>Loading recommendations…</div>
+          </div>
+        </div>
+
+        <!-- Estimate result -->
+        <div class="cp-estimate-result" id="cpEstimateResult">
+          <div class="cp-estimate-result__hero">
+            <span class="cp-estimate-result__hero-label">📊 Itemised Cost &amp; Scope Breakdown</span>
+            <div class="cp-estimate-result__price" id="cpEstimatePrice">₹–</div>
+            <p class="cp-estimate-result__note">
+              ℹ️ <strong>Why this range?</strong> Remote estimates use standard catalogue benchmarks.
+              Every service below shows exact scope: what is covered and what is excluded to prevent surprise bills.
+            </p>
+          </div>
+          <div class="cp-estimate-items" id="cpEstimateItems"></div>
+          <div class="cp-estimate-footer">
+            <div class="cp-estimate-footer__total">
+              <span>Estimated Total Checklist</span>
+              <strong id="cpEstimateFooterTotal">₹–</strong>
+            </div>
+            <button class="cp-book-btn" onclick="bookSelectedServices()">Book Selected Services →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /.cp-shell -->
+
+<!-- ══════════════ STICKY ESTIMATE BAR ══════════════ -->
+<div class="cp-estimate-bar" id="cpEstimateBar" style="display:none;">
+  <div>
+    <div class="cp-estimate-bar__count">
+      <strong id="cpBarServiceCount">0 services</strong> selected across all rooms
+    </div>
+  </div>
+  <div class="cp-estimate-bar__price">
+    <span id="cpBarPrice">₹0</span>
+    <small>Indicative estimate</small>
+  </div>
+  <button class="cp-estimate-btn" id="cpGetEstimateBtn" onclick="getEstimate()">
+    💰 Know My Estimate
+  </button>
+</div>
+
+<!-- ══════════════ BOOKING MODAL ══════════════ -->
+<div id="cpBookModal" style="display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:20px; padding:28px; width:min(440px,92vw); box-shadow:0 24px 60px rgba(0,0,0,.2);">
+    <h3 style="color:#bd420e; margin-bottom:16px;">📋 Confirm Your Booking</h3>
+    <div id="cpBookSummary" style="margin-bottom:16px; font-size:.85rem; color:#574237;"></div>
+    <label style="font-size:.82rem; font-weight:600; color:#574237;">Your Name</label>
+    <input id="cpBookName" type="text" placeholder="Full name" style="width:100%;padding:10px;border:1px solid #ead7c5;border-radius:10px;margin:6px 0 12px;font-size:.9rem;outline:none;">
+    <label style="font-size:.82rem; font-weight:600; color:#574237;">Phone Number</label>
+    <input id="cpBookPhone" type="tel" placeholder="10-digit mobile" style="width:100%;padding:10px;border:1px solid #ead7c5;border-radius:10px;margin:6px 0 12px;font-size:.9rem;outline:none;">
+    <label style="font-size:.82rem; font-weight:600; color:#574237;">Preferred Date</label>
+    <input id="cpBookDate" type="date" style="width:100%;padding:10px;border:1px solid #ead7c5;border-radius:10px;margin:6px 0 18px;font-size:.9rem;outline:none;">
+    <div style="display:flex; gap:10px;">
+      <button onclick="submitCopilotBooking()" style="flex:1;background:#bd420e;color:#fff;border:0;padding:13px;border-radius:999px;font-weight:800;cursor:pointer;">Confirm Booking</button>
+      <button onclick="document.getElementById('cpBookModal').style.display='none'" style="flex:0;background:#fff;border:1px solid #ead7c5;padding:13px 18px;border-radius:999px;cursor:pointer;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  State
+// ══════════════════════════════════════════════
+const state = {
+  selectedRooms: [],       // ['Living Room','Kitchen',…]
+  roomLabels: {},          // {roomKey: customLabel}
+  mode: null,              // 'photos' | 'questions'
+  activeRoom: null,
+  photos: {},              // {roomKey: [{id, name, url, file}]}
+  services: {},            // {roomKey: [{id, name, price, category, image, why, checked}]}
+  analyzed: {},            // {roomKey: bool}
+};
+
+// Check for pre-selected room from URL parameters
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const preselectRoom = params.get('room');
+  if (preselectRoom) {
+    const card = document.querySelector(`.room-card[data-room="${preselectRoom}"]`);
+    if (card) {
+      toggleRoom(card);
+    }
+  }
+});
+
+// ══════════════════════════════════════════════
+//  Step 1 — Room selection
+// ══════════════════════════════════════════════
+function toggleRoom(card) {
+  const room = card.dataset.room;
+  card.classList.toggle('is-selected');
+  if (card.classList.contains('is-selected')) {
+    if (!state.selectedRooms.includes(room)) state.selectedRooms.push(room);
+  } else {
+    state.selectedRooms = state.selectedRooms.filter(r => r !== room);
+  }
+  document.getElementById('step1Next').disabled = state.selectedRooms.length === 0;
+  document.getElementById('cpSelectedCount').textContent =
+    state.selectedRooms.length ? state.selectedRooms.length + ' room(s) selected' : '';
+}
+
+function goStep1() {
+  setStep('step1');
+  setProgress(25);
+}
+
+function goStep2() {
+  if (!state.selectedRooms.length) return;
+  setStep('step2');
+  setProgress(50);
+}
+
+// ══════════════════════════════════════════════
+//  Step 2 — Mode selection
+// ══════════════════════════════════════════════
+function chooseMode(mode) {
+  state.mode = mode;
+  buildWorkspace();
+  setStep('step3');
+  setProgress(75);
+  document.getElementById('cpEstimateBar').style.display = 'flex';
+  document.getElementById('cpPhotoSection').style.display = mode === 'photos' ? 'block' : 'none';
+}
+
+// ══════════════════════════════════════════════
+//  Step 3 — Build workspace
+// ══════════════════════════════════════════════
+function buildWorkspace() {
+  const sidebar = document.getElementById('cpSidebar');
+  sidebar.innerHTML = '';
+  state.selectedRooms.forEach((room, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'cp-sidebar__room';
+    btn.dataset.room = room;
+    btn.innerHTML = `
+      <span>${state.roomLabels[room] || room}</span>
+      <span class="cp-sidebar__dot"></span>`;
+    btn.onclick = () => switchRoom(room);
+    sidebar.appendChild(btn);
+  });
+  switchRoom(state.selectedRooms[0]);
+}
+
+function switchRoom(room) {
+  state.activeRoom = room;
+  // Highlight sidebar
+  document.querySelectorAll('.cp-sidebar__room').forEach(b => {
+    b.classList.toggle('is-active', b.dataset.room === room);
+  });
+  // Header
+  document.getElementById('cpRoomTitle').textContent = state.roomLabels[room] || room;
+  document.getElementById('cpRoomSub').textContent = `Services recommended for your ${room.toLowerCase()}`;
+  // Photo grid
+  if (state.mode === 'photos') renderPhotoGrid(room);
+  // Services
+  if (state.services[room]) {
+    renderServices(room);
+  } else {
+    fetchRoomServices(room);
+  }
+}
+
+function renameRoom() {
+  const room = state.activeRoom;
+  const label = window.prompt('Give this room a custom label:', state.roomLabels[room] || room);
+  if (label && label.trim()) {
+    state.roomLabels[room] = label.trim();
+    document.getElementById('cpRoomTitle').textContent = label.trim();
+    // Update sidebar
+    document.querySelectorAll('.cp-sidebar__room').forEach(b => {
+      if (b.dataset.room === room) b.querySelector('span').textContent = label.trim();
+    });
+  }
+}
+
+// ══════════════════════════════════════════════
+//  Photo management
+// ══════════════════════════════════════════════
+function handlePhotoUpload(event) {
+  const room = state.activeRoom;
+  const files = [...event.target.files];
+  if (!state.photos[room]) state.photos[room] = [];
+  files.forEach(file => {
+    const id = 'photo_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+    state.photos[room].push({ id, name: file.name.replace(/\.[^.]+$/, ''), url: URL.createObjectURL(file), file });
+  });
+  renderPhotoGrid(room);
+  event.target.value = '';
+  if (files.length > 0) triggerPhotoAnalysis(room);
+}
+
+function renderPhotoGrid(room) {
+  const grid = document.getElementById('cpPhotoGrid');
+  const photos = state.photos[room] || [];
+  grid.innerHTML = `
+    <label for="cpPhotoInput" class="cp-photo-add">
+      <span>+</span>Add Photos
+    </label>`;
+  photos.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'cp-photo-card';
+    card.innerHTML = `
+      <img src="${p.url}" alt="${p.name}">
+      <div class="cp-photo-card__name" title="${p.name}">${p.name}</div>
+      <div class="cp-photo-card__meta">Just added</div>
+      <div class="cp-photo-card__actions">
+        <button onclick="renamePhoto('${room}','${p.id}')">✏️ Rename</button>
+        <button class="del" onclick="deletePhoto('${room}','${p.id}')">🗑 Delete</button>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function renamePhoto(room, id) {
+  const photos = state.photos[room] || [];
+  const photo = photos.find(p => p.id === id);
+  if (!photo) return;
+  const newName = window.prompt('Rename photo:', photo.name);
+  if (newName && newName.trim()) {
+    photo.name = newName.trim();
+    renderPhotoGrid(room);
+  }
+}
+
+function deletePhoto(room, id) {
+  if (!state.photos[room]) return;
+  state.photos[room] = state.photos[room].filter(p => p.id !== id);
+  renderPhotoGrid(room);
+  updateEstimateBar();
+}
+
+async function triggerPhotoAnalysis(room) {
+  const statusEl = document.getElementById('cpAiStatus');
+  const statusText = document.getElementById('cpAiStatusText');
+  statusEl.style.display = 'flex';
+  statusText.textContent = 'Analyzing your photos…';
+  document.getElementById('cpServicesSubtitle').textContent = 'AI is reading your photos and matching services…';
+
+  // Simulate a small delay (AI analysis feel), then fetch
+  await new Promise(r => setTimeout(r, 1200));
+  statusText.textContent = `Detected ${state.photos[room].length} photo(s) — refining recommendations…`;
+  await fetchRoomServices(room, true);
+  statusEl.style.display = 'none';
+  document.getElementById('cpServicesSubtitle').textContent = 'Services identified from your photos. Tick what you want.';
+}
+
+// ══════════════════════════════════════════════
+//  Service fetching & rendering
+// ══════════════════════════════════════════════
+async function fetchRoomServices(room, hasPhotos = false) {
+  document.getElementById('cpServicesList').innerHTML =
+    '<div class="cp-loading"><div class="spinner"></div>Finding services…</div>';
+  try {
+    const res = await fetch('/api/copilot/room-services', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ room, has_photos: hasPhotos, photo_count: (state.photos[room] || []).length })
+    });
+    const data = await res.json();
+    state.services[room] = data.services.map(s => ({...s, checked: false}));
+    state.analyzed[room] = true;
+    // Mark sidebar dot
+    document.querySelectorAll('.cp-sidebar__room').forEach(b => {
+      if (b.dataset.room === room) b.classList.add('is-done');
+    });
+    renderServices(room);
+  } catch(e) {
+    document.getElementById('cpServicesList').innerHTML =
+      '<p style="color:#c0392b;padding:16px;font-size:.85rem;">Could not load services. Please refresh.</p>';
+  }
+}
+
+function renderServices(room) {
+  const services = state.services[room] || [];
+  const list = document.getElementById('cpServicesList');
+  if (!services.length) {
+    list.innerHTML = '<p class="cp-hint" style="padding:12px;">No specific services found for this room.</p>';
+    return;
+  }
+
+  // Group: "Group services" (cleaning bundles) vs "Individual services"
+  const grouped = services.filter(s => s.is_group);
+  const individual = services.filter(s => !s.is_group);
+
+  let html = '';
+  if (grouped.length) {
+    html += `<div class="cp-group-label">🏠 Bundle / Group Services</div>`;
+    html += grouped.map(s => serviceRowHTML(s, room)).join('');
+  }
+  if (individual.length) {
+    html += `<div class="cp-group-label">🔧 Individual Services</div>`;
+    html += individual.map(s => serviceRowHTML(s, room)).join('');
+  }
+  list.innerHTML = html;
+  updateEstimateBar();
+}
+
+function serviceRowHTML(s, room) {
+  const checked = s.checked;
+  const imgSrc = s.image ? (s.image.startsWith('/') ? s.image : `/assets/${s.image}`) : '';
+  const imgEl = imgSrc
+    ? `<img class="cp-service-row__img" src="${imgSrc}" alt="${s.name}" onerror="this.style.display='none'">`
+    : `<div class="cp-service-row__img" style="background:#f9eddc;display:flex;align-items:center;justify-content:center;font-size:1.6rem;">${s.icon || '🔧'}</div>`;
+  const whyEl = s.why
+    ? `<div class="cp-service-row__why"><strong>Why this is recommended:</strong> ${s.why}</div>`
+    : '';
+
+  // Scope preview if available
+  let scopePreview = '';
+  if (s.covers && s.covers.length) {
+    scopePreview = `
+      <div style="font-size: .72rem; color: #475569; margin-top: 5px; display: flex; flex-wrap: wrap; gap: 8px;">
+        <span style="color: #15803d;">✔ Covers: ${s.covers.slice(0, 2).join(', ')}</span>
+        <span style="color: #b91c1c;">✖ Excludes: ${(s.doesnt || []).slice(0, 1).join(', ')}</span>
+      </div>`;
+  }
+
+  return `
+    <div class="cp-service-row ${checked ? 'is-checked' : ''}"
+         onclick="toggleService('${room}','${s.id}', event)">
+      <div class="cp-service-row__check">${checked ? '✓' : ''}</div>
+      ${imgEl}
+      <div class="cp-service-row__body">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
+          <a class="cp-service-row__link" href="${s.detail_url || '/'}" target="_blank" onclick="event.stopPropagation();" title="View complete service catalog details">
+            ${s.name} <span style="font-size:.7rem; opacity:.7;">↗</span>
+          </a>
+        </div>
+        <div class="cp-service-row__meta">
+          <span>⭐ ${s.rating || '4.5'}</span>
+          <span>${s.category}</span>
+          ${s.duration ? `<span>⏱ ${s.duration}</span>` : ''}
+        </div>
+        ${whyEl}
+        ${scopePreview}
+
+        <!-- Semi-supervised Model Feedback -->
+        <div class="cp-feedback" onclick="event.stopPropagation();">
+          <span class="cp-feedback__label">Help AI learn:</span>
+          <button type="button" class="cp-feedback__btn" id="fb_up_${s.id}" onclick="submitFeedback('${room}', '${s.id}', '${s.name}', 'up')">👍 Relevant</button>
+          <button type="button" class="cp-feedback__btn" id="fb_down_${s.id}" onclick="submitFeedback('${room}', '${s.id}', '${s.name}', 'down')">👎 Not needed</button>
+          <span class="cp-feedback__thanks" id="fb_msg_${s.id}">Feedback saved!</span>
+        </div>
+      </div>
+      <div class="cp-service-row__price">₹${Number(s.price||0).toLocaleString('en-IN')}</div>
+    </div>`;
+}
+
+async function submitFeedback(room, serviceId, serviceName, vote) {
+  const upBtn = document.getElementById(`fb_up_${serviceId}`);
+  const downBtn = document.getElementById(`fb_down_${serviceId}`);
+  const msg = document.getElementById(`fb_msg_${serviceId}`);
+
+  if (vote === 'up') {
+    upBtn.classList.add('is-up');
+    downBtn.classList.remove('is-down');
+  } else {
+    downBtn.classList.add('is-down');
+    upBtn.classList.remove('is-up');
+  }
+
+  try {
+    await fetch('/api/copilot/feedback', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ room, service_id: serviceId, service_name: serviceName, vote })
+    });
+    if (msg) {
+      msg.classList.add('is-visible');
+      setTimeout(() => msg.classList.remove('is-visible'), 2500);
+    }
+  } catch (err) {
+    console.error('Feedback error:', err);
+  }
+}
+
+function toggleService(room, id, event) {
+  if (event && event.target.closest('.cp-feedback')) return;
+  const services = state.services[room] || [];
+  const svc = services.find(s => s.id === id);
+  if (svc) {
+    svc.checked = !svc.checked;
+    renderServices(room);
+  }
+  updateEstimateBar();
+}
+
+// ══════════════════════════════════════════════
+//  Estimate bar
+// ══════════════════════════════════════════════
+function updateEstimateBar() {
+  let total = 0, count = 0;
+  Object.values(state.services).forEach(roomServices => {
+    (roomServices || []).forEach(s => {
+      if (s.checked) { total += Number(s.price || 0); count++; }
+    });
+  });
+  document.getElementById('cpBarServiceCount').textContent = count + ' service' + (count !== 1 ? 's' : '');
+  document.getElementById('cpBarPrice').textContent = '₹' + total.toLocaleString('en-IN');
+  document.getElementById('cpGetEstimateBtn').disabled = count === 0;
+}
+
+async function getEstimate() {
+  const selected = [];
+  Object.entries(state.services).forEach(([room, roomServices]) => {
+    (roomServices || []).forEach(s => {
+      if (s.checked) selected.push({...s, room});
+    });
+  });
+  if (!selected.length) return;
+
+  const res = await fetch('/api/copilot/estimate-checklist', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ services: selected.map(s => ({id: s.id, name: s.name, price: s.price, room: s.room})) })
+  });
+  const data = await res.json();
+
+  const resultEl = document.getElementById('cpEstimateResult');
+  document.getElementById('cpEstimatePrice').textContent =
+    '₹' + Number(data.total_low).toLocaleString('en-IN') + ' – ₹' + Number(data.total_high).toLocaleString('en-IN');
+  const footerTotal = document.getElementById('cpEstimateFooterTotal');
+  if (footerTotal) {
+    footerTotal.textContent = '₹' + Number(data.total_low).toLocaleString('en-IN') + ' – ₹' + Number(data.total_high).toLocaleString('en-IN');
+  }
+
+  document.getElementById('cpEstimateItems').innerHTML = data.line_items.map(item => {
+    const coversList = (item.covers || []).map(c => `<li>${c}</li>`).join('');
+    const doesntList = (item.doesnt || []).map(d => `<li>${d}</li>`).join('');
+    const whyBlock = item.why ? `
+      <div class="cp-estimate-item__why">
+        <strong>Why this service is included:</strong>
+        ${item.why}
+      </div>` : '';
+
+    return `
+      <div class="cp-estimate-item">
+        <div class="cp-estimate-item__head">
+          <div>
+            <a href="${item.detail_url || '/'}" target="_blank" class="cp-estimate-item__title" style="text-decoration:none; color:inherit;">
+              ${item.name} <span style="font-size:.7rem; opacity:.7;">↗</span>
+            </a>
+            <div class="cp-estimate-item__room">${item.room}</div>
+          </div>
+          <div class="cp-estimate-item__price">₹${Number(item.price).toLocaleString('en-IN')}</div>
+        </div>
+        ${whyBlock}
+        <div class="cp-estimate-item__body">
+          <div class="cp-covers">
+            <h4>What it covers:</h4>
+            <ul>${coversList || '<li>Professional execution</li>'}</ul>
+          </div>
+          <div class="cp-no-covers">
+            <h4>What it does not cover:</h4>
+            <ul>${doesntList || '<li>Structural alterations</li>'}</ul>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+  resultEl.classList.add('is-visible');
+  resultEl.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+}
+
+function bookSelectedServices() {
+  const selected = [];
+  Object.entries(state.services).forEach(([room, roomServices]) => {
+    (roomServices || []).forEach(s => { if (s.checked) selected.push({...s, room}); });
+  });
+  const summary = selected.map(s => `• ${s.room}: ${s.name} (₹${Number(s.price||0).toLocaleString('en-IN')})`).join('<br>');
+  document.getElementById('cpBookSummary').innerHTML =
+    `<strong>Selected services:</strong><br>${summary || 'None selected'}`;
+  const modal = document.getElementById('cpBookModal');
+  modal.style.display = 'flex';
+}
+
+async function submitCopilotBooking() {
+  const name = document.getElementById('cpBookName').value.trim();
+  const phone = document.getElementById('cpBookPhone').value.trim();
+  const date = document.getElementById('cpBookDate').value;
+  if (!name || !phone || !date) { alert('Please fill all fields.'); return; }
+
+  const selected = [];
+  Object.entries(state.services).forEach(([room, roomServices]) => {
+    (roomServices || []).forEach(s => { if (s.checked) selected.push(s.name); });
+  });
+
+  const res = await fetch('/book', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ service: selected.join(', '), name, phone, date, role: 'Copilot User' })
+  });
+  const data = await res.json();
+  document.getElementById('cpBookModal').style.display = 'none';
+  alert(`✅ Booking confirmed for ${selected.length} service(s)! We'll contact you shortly.`);
+}
+
+// ══════════════════════════════════════════════
+//  Utility
+// ══════════════════════════════════════════════
+function setStep(id) {
+  document.querySelectorAll('.cp-step').forEach(s => s.classList.remove('is-active'));
+  document.getElementById(id).classList.add('is-active');
+}
+function setProgress(pct) {
+  document.getElementById('cpProgress').style.width = pct + '%';
+}
+</script>
+</body>
+</html>

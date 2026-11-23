@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Book trusted plumbing services in Pune for toilets, taps, basins, drains, pipes, showers and water tanks.">
+  <title>Plumber in Pune | Book Online | NoBroker</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='plumber.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='copilot.css') }}">
+</head>
+<body>
+  <a href="/copilot?room=Bathroom" class="copilot-fab" title="Need help deciding? Launch AI Copilot"><span class="copilot-fab__dot"></span>✦ Need Help? Ask Copilot</a>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="NoBroker Home Services"><strong>NoBroker</strong><span>Home Services</span></a>
+    <nav class="header-nav" aria-label="Account navigation">
+      <button class="location-button" type="button">Pune <span aria-hidden="true">⌄</span></button>
+      <button class="plain-nav" type="button" data-open-bookings>My Bookings <span id="bookingCount">0</span></button>
+      <button class="plain-nav" type="button" data-open-booking data-service="Plumber consultation">Login / Sign up</button>
+      <button class="header-cart" type="button" data-open-cart aria-label="Open cart">Cart <span id="cartCount">0</span></button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-pattern" aria-hidden="true"></div>
+      <div class="page-wrap hero-content">
+        <p class="breadcrumb"><a href="/">Home</a><span>/</span><a href="/">Home Services</a><span>/</span><strong>Plumber in Pune</strong></p>
+        <div class="intro">
+          <div class="intro-copy">
+            <p class="eyebrow">Trusted home services <i></i> Verified professionals</p>
+            <h1>Plumber in Pune <span>– Book Online at Just ₹99</span></h1>
+            <p class="intro-subtitle">Book expert plumbing services at your doorstep</p>
+            <label class="service-search"><span aria-hidden="true">⌕</span><input id="serviceSearch" type="search" placeholder="Search plumbing services" autocomplete="off" aria-label="Search plumbing services"><kbd>Ctrl K</kbd></label>
+            <div class="rating-inline"><strong><span aria-hidden="true">★</span> 4.73</strong><span>102.4K+ customer ratings</span><b>✓ Verified professionals</b></div>
+          </div>
+          <aside class="hero-photo"><img src="{{ url_for('assets', filename=hero_photo) }}" alt="Professional plumber ready to help with home repairs"><span><strong>Plumbing help, made easy</strong><small>Skilled professionals at your doorstep</small></span></aside>
+        </div>
+        <nav class="category-chips" aria-label="Plumbing service categories">
+          {% for category in categories %}<a href="#{{ category['id'] }}"><span class="chip-icon">{{ category['icon'] }}</span>{{ category['title'] }}</a>{% endfor %}
+        </nav>
+      </div>
+    </section>
+
+    <div class="page-wrap catalog-layout">
+      <aside class="category-sidebar">
+        <h2>Plumbing services</h2>
+        <nav aria-label="Service categories">
+          {% for category in categories %}<a href="#{{ category['id'] }}" data-side-link="{{ category['id'] }}"><span aria-hidden="true">{{ category['icon'] }}</span>{{ category['title'] }}<small>{{ category['services']|length }}</small></a>{% endfor %}
+        </nav>
+        <div class="sidebar-benefits"><h3>Service benefits</h3><p>✓ Verified professionals</p><p>✓ Upfront service prices</p><p>✓ Convenient online booking</p></div>
+      </aside>
+
+      <div class="catalog-main" id="serviceCatalog">
+        <div class="catalog-toolbar"><div><span class="section-kicker">Book a trusted professional</span><h2>Plumbing services</h2></div><span class="service-total" id="serviceTotal">{{ total_services }} services</span></div>
+        <p class="empty-state" id="noResults" hidden>No services match your search. Try another term.</p>
+        {% for category in categories %}
+        <section class="service-category" id="{{ category['id'] }}" data-category-section="{{ category['title']|lower }}">
+          <div class="category-banner"><img src="{{ url_for('assets', filename=category['photo_path']) }}" alt="{{ category['title'] }} plumbing services" loading="lazy"><div><span class="section-kicker">Home plumbing</span><h2>{{ category['title'] }}</h2><p>{{ category['services']|length }} services available</p></div><span class="category-emoji" aria-hidden="true">{{ category['icon'] }}</span></div>
+          <div class="service-grid">
+            {% for service in category['services'] %}
+            <article class="service-card" data-service-card data-search="{{ service['name']|lower }} {{ category['title']|lower }} {{ service['description']|lower }}">
+              <button class="service-photo" type="button" data-photo="{{ url_for('assets', filename=service['photo_path']) }}" data-caption="{{ service['name'] }}" aria-label="View photo for {{ service['name'] }}"><img src="{{ url_for('assets', filename=service['photo_path']) }}" alt="{{ service['name'] }} plumbing service" loading="lazy"><span class="photo-zoom" aria-hidden="true">⌕</span></button>
+              <div class="service-card-heading"><h3>{{ service['name'] }}</h3><span class="service-icon" aria-hidden="true">{{ category['icon'] }}</span></div>
+              <p class="service-rating"><span aria-hidden="true">★</span> {{ service['rating'] }}</p>
+              <p class="service-description">{{ service['description'] }}</p>
+              <p class="service-duration">◷ {{ service['duration'] }}</p>
+              <div class="service-card-footer"><p class="service-price">{% if service['starting'] %}<small>Starts at</small>{% endif %}<strong>₹{{ '{:,}'.format(service['price']) }}</strong></p><button class="add-button" type="button" data-add-service data-name="{{ service['name'] }}" data-price="{{ service['price'] }}">ADD <span aria-hidden="true">+</span></button></div>
+            </article>
+            {% endfor %}
+          </div>
+        </section>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="page-wrap">
+      <section class="vip-panel" style="--vip-background: url('{{ url_for('assets', filename=vip_background) }}')"><div><span class="section-kicker">NoBroker VIP</span><h2>Save more on home services</h2><p>Get member benefits when you book trusted professionals for your home.</p><button type="button" class="primary-button" data-open-booking data-service="NoBroker VIP membership">Explore membership</button></div><img src="{{ url_for('assets', filename=vip_photo) }}" alt="NoBroker home service professional" loading="lazy"></section>
+      <section class="review-panel"><div><span class="section-kicker">Ratings and reviews</span><h2><span>★</span> 4.73 / 5</h2><p>Based on 102.4K+ customer ratings</p></div><div class="rating-bars"><p><span>Service quality</span><i><b style="width:94%"></b></i><strong>4.8</strong></p><p><span>On-time arrival</span><i><b style="width:91%"></b></i><strong>4.7</strong></p></div></section>
+      <section class="promise-panel"><div class="promise-mark" aria-hidden="true">✓</div><div><span class="section-kicker">The NoBroker promise</span><h2>Home repairs, made easier</h2></div><p>Verified professionals <span>·</span> Upfront prices <span>·</span> Convenient online booking</p></section>
+      <section class="faq-section"><span class="section-kicker">Helpful answers</span><h2>Frequently asked questions</h2>
+        <details><summary>How do I book a plumber in Pune?<span>+</span></summary><p>Add your service to the cart, select Book services, and enter your contact details and preferred date. The service team can confirm the visit.</p></details>
+        <details><summary>What are typical plumber charges in Pune?<span>+</span></summary><p>Prices shown are starting labour charges for the listed task. The professional confirms the scope and any material costs before work begins.</p></details>
+        <details><summary>Can I book a plumber for a same-day visit?<span>+</span></summary><p>Available visit slots depend on your location and service. Share your preferred date when booking so the team can confirm availability.</p></details>
+        <details><summary>Are parts and materials included in the price?<span>+</span></summary><p>Material charges may be separate. The professional will confirm the estimate before proceeding.</p></details>
+        <details><summary>Can I book more than one plumbing service?<span>+</span></summary><p>Yes. Add multiple services to your cart and submit them together as one booking request.</p></details>
+      </section>
+    </div>
+  </main>
+
+  <div class="modal-backdrop" id="bookingModal" hidden><section class="dialog booking-dialog" role="dialog" aria-modal="true" aria-labelledby="bookingTitle"><button class="dialog-close" type="button" data-close-modal aria-label="Close">×</button><span class="section-kicker">Book a service</span><h2 id="bookingTitle">Complete your booking</h2><p class="booking-summary" id="bookingSummary"></p><form id="bookingForm"><label>Your name<input name="name" autocomplete="name" required placeholder="Enter your full name"></label><label>Phone number<input name="phone" inputmode="tel" pattern="[0-9+ -]{10,15}" required placeholder="Enter your phone number"></label><label>Preferred date<input name="date" type="date"></label><p class="form-error" id="bookingError" role="alert"></p><button class="primary-button" type="submit">Confirm booking</button></form></section></div>
+  <div class="modal-backdrop" id="photoModal" hidden><section class="dialog photo-dialog" role="dialog" aria-modal="true" aria-labelledby="photoCaption"><button class="dialog-close" type="button" data-close-modal aria-label="Close">×</button><img id="largePhoto" src="" alt=""><p id="photoCaption"></p></section></div>
+  <div class="modal-backdrop" id="bookingsModal" hidden><section class="dialog bookings-dialog" role="dialog" aria-modal="true" aria-labelledby="bookingsTitle"><button class="dialog-close" type="button" data-close-modal aria-label="Close">×</button><span class="section-kicker">Your activity</span><h2 id="bookingsTitle">My bookings</h2><div id="bookingsList" class="bookings-list"><p>Loading bookings…</p></div></section></div>
+  <div class="cart-backdrop" id="cartBackdrop" hidden><aside class="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cartTitle"><div class="cart-heading"><div><span class="section-kicker">Your selections</span><h2 id="cartTitle">Service cart</h2></div><button type="button" data-close-cart aria-label="Close cart">×</button></div><div id="cartItems" class="cart-items"><p class="cart-empty">Your cart is empty. Add a service to get started.</p></div><div class="cart-footer"><p><span>Estimated total</span><strong id="cartTotal">₹0</strong></p><small>Final charges may include approved materials or additional work.</small><button class="primary-button" type="button" data-checkout>Book services</button></div></aside></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="{{ url_for('static', filename='plumber.js') }}" defer></script>
+</body>
+</html>
